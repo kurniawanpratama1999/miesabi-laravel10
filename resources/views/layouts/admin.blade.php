@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title', 'MIESABI')</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head> 
+    </head>
     <body>
         <x-navbar-admin/>
         @yield('section')

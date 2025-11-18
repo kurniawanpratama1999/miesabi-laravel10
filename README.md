@@ -65,3 +65,46 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 # miesabi-laravel10
+
+<!-- 
+CREATE TABLE siswa (  
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    id_kelas int,
+    nama VARCHAR(100) NOT NULL,
+    nis VARCHAR(20) NOT NULL UNIQUE,
+    jenis_kelamin ENUM('L', 'P'),
+
+    CONSTRAINT fk_KelasSiswa Foreign Key (id_kelas) REFERENCES kelas(id)
+);
+
+CREATE TABLE kelas (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nama_kelas VARCHAR(50) UNIQUE,
+    wali_kelas VARCHAR(100)
+);
+
+INSERT INTO kelas (nama_kelas, wali_kelas) VALUES
+('Bahasa Jawascript', 'Mr. Osamu Dazai'),
+('Bahasa Ular', "Mr. Harry Potter")
+
+INSERT INTO siswa (id_kelas, nama, nis, jenis_kelamin) VALUES
+(1,'Fulanawan', '31415926535897932380', "L"),   
+(2,'Fulanawati', '31415926535897932381', "P"),   
+(1,'Fulanowan', '31415926535897932382', "L"),   
+(2,'Fulanowati', '31415926535897932383', "P"),   
+(1,'Fulanuwan', '31415926535897932384', "L"),   
+(2,'Fulanuwati', '31415926535897932385', "P"),   
+(1,'Fulaniwan', '31415926535897932386', "L"),   
+(2,'Fulaniwati', '31415926535897932387', "P"),   
+(1,'Fulanewan', '31415926535897932388', "L"),   
+(2,'Fulanewati', '31415926535897932389', "P")   
+
+SELECT siswa.*, kelas.* FROM siswa JOIN kelas ON siswa.id_kelas = kelas.id;
+
+SELECT * FROM siswa WHERE jenis_kelamin LIKE 'L';
+
+SELECT * FROM siswa WHERE jenis_kelamin LIKE 'P';
+
+SELECT count(siswa.id) FROM siswa JOIN kelas ON siswa.id_kelas = kelas.id WHERE kelas.wali_kelas = 'Mr. Osamu Dazai';
+SELECT count(siswa.id ) FROM siswa JOIN kelas ON siswa.id_kelas = kelas.id WHERE kelas.wali_kelas = 'Mr. Harry Potter';
+ -->

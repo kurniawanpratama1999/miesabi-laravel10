@@ -4,7 +4,7 @@
 
 @section('section')
     <main style="min-height: calc(100dvh - 3.5rem);" class="row overflow-hidden container-fluid mx-auto bg-young-brown">
-        <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.2);" class="mx-auto py-4">
+        <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.7);" class="mx-auto py-4">
             <h4>Rincian Harga</h4>
 
             <div>
@@ -17,7 +17,7 @@
                             <span>Original 1</span>
                             <span>Yamin 1</span>
                         </div>
-                        <div class="col-6 row"> 
+                        <div class="col-6 row">
                             <span class="col-6">x2</span>
                             <span class="col-6">Rp 40.000</span>
                         </div>
@@ -52,6 +52,6 @@
             </div>
 
             <button class="border-0 bg-success px-3 py-1 mt-5 mx-auto d-block text-white">Buat Pesanan</button>
-        </section> 
+        </section>
     </main>
 @endsection
