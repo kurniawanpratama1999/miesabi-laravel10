@@ -1,0 +1,22 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+:root {
+    --old-brown: #a63c03;
+    --young-brown: #f0b392;
+}
+
+.bg-old-brown {
+    background-color: var(--old-brown);
+}
+
+.bg-young-brown {
+    background-color: var(--young-brown);
+}
+
+.text-old-brown {
+    color: var(--old-brown);
+}
+
+.text-young-brown {
+    color: var(--young-brown);
+}
