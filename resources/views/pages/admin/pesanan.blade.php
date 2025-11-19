@@ -5,12 +5,8 @@
 @section('section')
     <main style="min-height: calc(100dvh - 3.5rem);" class="overflow-hidden container-fluid mx-auto bg-young-brown">
         <div class="container mx-auto py-4">
-            <h4>Status Pesanan</h4>
-            <section class="d-flex gap-5 mb-3 justify-content-end">
-                <a href="#" class="link-dark">Sedang diproses</a>
-                <a href="#" class="link-dark">Pesanan Selesai</a>
-                <a href="#" class="link-dark">Riwayat Pesanan</a>
-            </section>
+            <h4>Kelola Produk</h4>
+            
             <table class="table table-responsive">
                 <thead class="table-dark">
                     <tr>

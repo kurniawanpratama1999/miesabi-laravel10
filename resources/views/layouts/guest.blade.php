@@ -7,7 +7,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head> 
     <body>
-        <x-navbar/>
+        <x-navbar-guest/>
         @yield('section')
     </body>
 </html>

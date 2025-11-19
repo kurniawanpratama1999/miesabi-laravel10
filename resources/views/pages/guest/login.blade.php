@@ -5,14 +5,15 @@
 @section('section')
 <main class="bg-body-secondary">
     <div style="min-height: calc(100dvh - 3.5rem);" class="container d-flex align-items-center justify-content-center p-4">
-        <form style="max-width: 300px;" class="row g-3 bg-white p-3 rounded shadow">
+        <form style="max-width: 300px;" method="POST" action="{{ route('login.process') }}" class="row g-3 bg-white p-3 rounded shadow">
+            @csrf
             <div class="col-md-12">
-                <label for="input-email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="input-email">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
             </div>
             <div class="col-md-12">
-                <label for="input-password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="input-password">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password">
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary w-100">Sign in</button>

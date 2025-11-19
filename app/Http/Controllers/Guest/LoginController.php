@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers\Guest;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Auth;
+use Illuminate\Http\Request;
+
+class LoginController extends Controller
+{
+    public function index () {
+        return view('pages.guest.login');
+    }
+
+    public function login (Request $req) {
+        $validate = $req->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        if(Auth::attempt($validate)) {
+            $req->session()->regenerate();
+            $user = Auth::user();
+            
+            if ($user->role === 'admin') {
+                return redirect()->intended('/pesanan');
+            }
+            
+            logger()->info('Login Berhasil');
+            return redirect()->intended("/{$user->username}/dashboard");
+        }
+        
+        logger()->info('Login Gagal');
+        return back()->withErrors(['username' => 'Username atau Password Salah'])->onlyInput('username');
+    }
+
+    public function logout(Request $req)
+    {
+        Auth::logout();
+
+        $req->session()->invalidate();
+        $req->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
+}
