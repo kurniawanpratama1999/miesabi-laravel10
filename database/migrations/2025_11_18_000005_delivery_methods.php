@@ -11,22 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $col) {
+        Schema::create('delivery_methods', function (Blueprint $col) {
             $col->id();
-
-            $col->foreignId('category_id')
-                ->constrained('categories')
-                ->restrictOnDelete();
-
             $col->string('name');
             $col->decimal('price', 10, 2);
-            $col->integer('stock')->default(0);
             $col->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('delivery_methods');
     }
 };

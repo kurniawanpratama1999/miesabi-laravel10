@@ -8,14 +8,15 @@ class Variant extends Model
 {
     protected $fillable = [
         'product_id',
-        'variant_name',
+        'name',
+        'price',
     ];
 
-    public function category () {
-        return $this->belongsTo(Category::class);
+    public function product () {
+        return $this->belongsTo(Product::class);
     }
 
-    public function products () {
-        return $this->belongsTo(Product::class);
+    public function order_details () {
+        return $this->hasMany(OrderDetail::class);
     }
 }

@@ -8,7 +8,6 @@ class Product extends Model
 {
     protected $fillable = [
         'category_id',
-        'code',
         'name',
         'price',
         'stock',
@@ -17,13 +16,12 @@ class Product extends Model
     public function category () {
         return $this->belongsTo(Category::class);
     }
-
-    public function variant () {
+    public function variants () {
         return $this->hasMany(Variant::class);
     }
-    
-    public function orders () {
+
+    public function order_details () {
         return $this->hasMany(Order::class);
     }
-    
+
 }

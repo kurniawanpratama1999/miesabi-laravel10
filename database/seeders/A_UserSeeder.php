@@ -7,7 +7,7 @@ use App\Models\User;
 use Hash;
 use Illuminate\Database\Seeder;
 
-class UserSeeder extends Seeder
+class A_UserSeeder extends Seeder
 {
     /**
      * Seed the application's database.

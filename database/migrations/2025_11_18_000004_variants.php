@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('variants', function (Blueprint $col) {
             $col->id();
             $col->foreignId('product_id')->constrained('products')->restrictOnDelete();
-            $col->string('variant_name');
+            $col->string('name');
+            $col->decimal('price', 10,2)->default(0);
             $col->timestamps();
         });
     }

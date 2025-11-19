@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
+use App\Models\DeliveryMethod;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CategorySeeder extends Seeder
+class F_DeliverySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,15 +15,16 @@ class CategorySeeder extends Seeder
     {
         $datas = [
             [
-                'category_name' => "makanan"
+                'name' => 'Sendiri',
+                'price' => 0
             ],
             [
-                'category_name' => "minuman"
+                'name' => 'Diantar',
+                'price' => 10000
             ],
         ];
-
         foreach($datas as $data) {
-            Category::create($data);
+            DeliveryMethod::create($data);
         }
     }
 }

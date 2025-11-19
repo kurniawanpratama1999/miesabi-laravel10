@@ -6,7 +6,7 @@ use App\Models\Variant;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class VariantSeeder extends Seeder
+class D_VariantSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,32 +15,39 @@ class VariantSeeder extends Seeder
     {
         $datas = [
             [
+                'name' => 'Original',
                 'product_id' => 1,
-                'variant_name' => 'Original',
+                'price' => 0
             ],
             [
+                'name' => 'Yamin',
                 'product_id' => 1,
-                'variant_name' => 'Yamin',
+                'price' => 0
             ],
             [
+                'name' => 'Chili Oil',
                 'product_id' => 1,
-                'variant_name' => 'Chili Oil',
+                'price' => 0
             ],
             [
+                'name' => 'Sapi',
                 'product_id' => 2,
-                'variant_name' => 'Sapi',
+                'price' => 0
             ],
             [
+                'name' => 'Ayam',
                 'product_id' => 2,
-                'variant_name' => 'Ayam',
+                'price' => 0
             ],
             [
+                'name' => 'Panas',
                 'product_id' => 3,
-                'variant_name' => 'Panas',
+                'price' => 0
             ],
             [
+                'name' => 'Dingin',
                 'product_id' => 3,
-                'variant_name' => 'Dingin',
+                'price' => 0
             ],
         ];
 

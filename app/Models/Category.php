@@ -7,12 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
-        'category_name'
+        'name'
     ];
-
-    public function variants () {
-        return $this->hasMany(Variant::class);
-    }
 
     public function products () {
         return $this->hasMany(Product::class);

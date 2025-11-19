@@ -9,26 +9,28 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
-        'product_id',
-        'variant_id',
-        'merge',
-        'quantity',
+        'delivery_id',
+        'code',
+        'payment_with',
+        'payment_status',
+        'order_status',
+        'note',
+        'address',
+        'phone',
 
     ];
+    
+    public function order_details () {
+        return $this->hasMany(OrderDetail::class);
+    }
 
     public function user () {
         return $this->belongsTo(User::class);
     }
-    
-    public function products () {
-        return $this->belongsToMany(Product::class);
-    }
-    
-    public function variant () {
-        return $this->belongsTo(Variant::class);
+
+    public function delivery () {
+        return $this->belongsTo(DeliveryMethod::class);
     }
 
-    public function order_detail () {
-        return $this->hasOne(OrderDetail::class);
-    }
+    
 }

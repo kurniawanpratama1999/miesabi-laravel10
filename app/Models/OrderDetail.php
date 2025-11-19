@@ -9,18 +9,21 @@ class OrderDetail extends Model
 {
     protected $fillable = [
         'order_id',
-        'metode',
-        'payment',
-        'status',
-        'subtotal',
-        'ongkir',
-        'total',
-        'note',
-        'address',
-        'phone',
+        'product_id',
+        'variant_id',
+        'merge',
+        'quantity'
     ];
 
     public function order () {
         return $this->belongsTo(Order::class);
+    }
+
+    public function products () {
+        return $this->belongsToMany(Product::class);
+    }
+
+    public function variants () {
+        return $this->belongsToMany(Variant::class);
     }
 }
