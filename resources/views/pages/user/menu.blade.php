@@ -95,7 +95,7 @@
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                 },
-                body: JSON.stringify({ data: cart.value })
+                body: JSON.stringify({ datas: cart.value })
             });
 
             const res = await api.json()

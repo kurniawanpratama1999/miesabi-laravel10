@@ -5,44 +5,45 @@
 @section('section')
     <main style="height: calc(100dvh - 3.5rem);" class="row overflow-hidden container-fluid mx-auto bg-young-brown">
         <section style="height: calc(100dvh - 3.5rem);" class="col-7 overflow-y-auto row gap-4 p-4 justify-content-evenly">
-            @foreach ([1,2,3,4,5] as $produk)
+            @foreach ($arr as $produk)
+            <script>
+                console.log({{ Js::from($produk) }})
+            </script>
             <div style="" class="col-4 bg-white p-2 ">
                 <div style="aspect-ratio: 1/1;" class="border"></div>
                 <div class="p-3">
-                    <span class="text-center fw-bold d-block">Mie Ayam Special</span>
+                    <span class="text-center fw-bold d-block">{{ $produk[0]->name }}</span>
 
+                    @if (count($produk[0]->variants) > 0)
                     <div class="d-flex flex-column mt-3 gap-3">
                         <span class="text-center">Pilih Varian</span>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="px-3 py-1 rounded-5 bg-old-brown text-white">Original</span>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                                <input type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="0">
-                                <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="px-3 py-1 rounded-5 bg-old-brown text-white">Yamin</span>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                                <input type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="0">
-                                <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="px-3 py-1 rounded-5 bg-old-brown text-white">Chili Oil</span>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                                <input type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="0">
-                                <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
-                            </div>
-                        </div>
-                    </div>
+                        @foreach ($produk[0]->variants as $variant)
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="px-3 py-1 rounded-5 bg-old-brown text-white">{{ $variant->name }}</span>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    {{-- <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-minus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                                    <input id="input-variant-{{ $produk[0]->name }}-{{ $variant->name }}"  type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="0">
+                                    <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-plus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button> --}}
 
+                                    <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-minus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                                    <input id="input-variant-{{ $produk[0]->name }}-{{ $variant->name }}"  type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="0">
+                                    <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-plus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    @endif
+                    @php
+                         $qty = array_values(array_filter($datas, fn ($v) => $v['id'] == $produk[0]->id));
+                    @endphp
                     <div class="d-flex gap-2 justify-content-center mt-3">
-                        <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                        <input type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0">
-                        <button style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                        {{-- <button id="btn-product-{{ $produk[0]->name }}-minus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                        <input id="input-product-{{ $produk[0]->name }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $qty[0]['qty'] ?? 0 }}">
+                        <button id="btn-product-{{ $produk[0]->name }}-plus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button> --}}
+
+                        <button onclick="handleDecrementProduct(event)"  type="button" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                        <input  type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $qty[0]['qty'] ?? 0 }}">
+                        <button onclick="handleIncrementProduct(event)"  style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
                     </div>
                 </div>
             </div>
@@ -83,6 +84,28 @@
 
                 <button type="submit" class="btn bg-old-brown text-white rounded-0">Chekout</button>
             </form>
-        </section>
+        </section>-
     </main>
 @endsection
+
+@pushOnce('scripts')
+<script>
+    function handleDecrementProduct (event) {
+        const parent = event.target.closest('div')
+        const inputElement = parent.querySelector('input')
+        const inputVal = parseInt(inputElement.value)
+
+        if (inputVal > 0) {
+            inputElement.value = parseInt(inputElement.value) - 1;
+        }
+    }
+
+    function handleIncrementProduct (event) {
+        const parent = event.target.closest('div')
+        const inputElement = parent.querySelector('input')
+        const inputVal = parseInt(inputElement.value)
+        
+            inputElement.value = parseInt(inputElement.value) + 1;
+    }
+</script>
+@endPushOnce

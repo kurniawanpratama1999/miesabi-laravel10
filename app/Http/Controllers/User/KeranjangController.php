@@ -3,21 +3,32 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class KeranjangController extends Controller
 {
     public function index()
     {
-        return view('pages.user.keranjang');
+        $datas = session('order_detail');
+        
+        $arr = [];
+        foreach($datas as $data) {
+            $arr[] = Product::with('variants')
+                        ->where('id', '=', $data['id'])
+                        ->get();    
+        }
+
+        return view('pages.user.keranjang', compact('arr', 'datas'));
     }
     public function store(Request $req)
     {
-        $data = $req->input('data');
+        $datas = $req->input('datas');
+        session(['order_detail' => $datas]);
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            'datas' => $datas
         ]);
     }
 }
