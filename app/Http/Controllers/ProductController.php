@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
-use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class VariantController extends Controller
+class ProductController extends Controller
 {
     /* =======================================================================================================
     Kolom yang harus di isi adalah :
@@ -19,17 +19,17 @@ class VariantController extends Controller
         // MENAMPILKAN DAFTAR (read) Kategori Produk dari DB_Table "categories"
 
         // ambil semua data
-        $datas = DB::table('variants')
-            ->leftJoin('products', 'products.id', '=', 'variants.product_id')
-            ->select('variants.id', 'variants.name', 'products.name as product_name', 'variants.price')
-            ->orderBy('product_name')
+        $datas = DB::table('products')
+            ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
+            ->select('products.id', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
+            ->orderBy('name')
             ->get();
 
-        $products = Product::all();
+        $categories = Category::all();
 
         // kembalikan function untuk render halaman 'display' dan lempar variable $datas
         // agar $datas bisa digunakan pada halaman kategori
-        return view('pages.admin.variant.CreateReadUpdateDelete', compact("datas", 'products'));
+        return view('pages.admin.product.CreateReadUpdateDelete', compact("datas", 'categories'));
     }
 
     public function edit(int $id)
@@ -37,22 +37,22 @@ class VariantController extends Controller
         // MENAMPILKAN DAFTAR (read) Kategori Produk dari DB_Table "categories"
 
         // ambil semua data
-        $datas = DB::table('variants')
-            ->leftJoin('products', 'products.id', '=', 'variants.product_id')
-            ->select('variants.id', 'variants.name', 'products.name as product_name', 'variants.price')
-            ->orderBy('product_name')
+        $datas = DB::table('products')
+            ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
+            ->select('products.id', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
+            ->orderBy('name')
             ->get();
 
-        $products = Product::all();
+        $categories = Category::all();
 
         // ambil data berdasarkan ID
-        $variant = Variant::findOrFail($id);
+        $product = Product::findOrFail($id);
 
         // kembalikan function untuk render halaman 'display' dan lempar variable $datas
         // agar $datas bisa digunakan pada halaman kategori
         return view(
-            'pages.admin.variant.CreateReadUpdateDelete',
-            compact("datas", 'delivery', 'products')
+            'pages.admin.product.CreateReadUpdateDelete',
+            compact("datas", 'product', 'categories')
         );
     }
 
@@ -62,12 +62,13 @@ class VariantController extends Controller
         try {
             $validate = $req->validate([
                 'name' => ['required', 'string'],
-                'product_id' => ['required', 'integer'],
-                'price' => ['required', 'numeric']
+                'category_id' => ['required', 'integer'],
+                'price' => ['required', 'numeric'],
+                'stock' => ['required', 'numeric']
             ]);
 
-            Variant::create($validate);
-            return redirect()->route('delivery.index');
+            Product::create($validate);
+            return redirect()->route('product.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }
@@ -80,13 +81,15 @@ class VariantController extends Controller
         try {
             $validate = $req->validate([
                 'name' => ['required', 'string'],
-                'product_id' => ['required', 'integer'],
-                'price' => ['required', 'numeric']
+                'category_id' => ['required', 'integer'],
+                'price' => ['required', 'numeric'],
+                'stock' => ['required', 'numeric']
             ]);
-            $findByID = Variant::findOrFail($id);
+
+            $findByID = Product::findOrFail($id);
             $findByID->update($validate);
 
-            return redirect()->route('delivery.index');
+            return redirect()->route('product.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
-use Hash;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 
 class A_UserSeeder extends Seeder
@@ -46,7 +46,7 @@ class A_UserSeeder extends Seeder
             ]
         ];
 
-        foreach($datas as $data) {
+        foreach ($datas as $data) {
             User::create($data);
         }
     }

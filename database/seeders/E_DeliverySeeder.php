@@ -6,7 +6,7 @@ use App\Models\DeliveryMethod;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class F_DeliverySeeder extends Seeder
+class E_DeliverySeeder extends Seeder
 {
     /**
      * Run the database seeds.

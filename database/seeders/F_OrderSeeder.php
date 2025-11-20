@@ -6,13 +6,13 @@ use App\Models\Order;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class E_OrderSeeder extends Seeder
+class F_OrderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
-    {   
+    {
         $datas = [
             [
                 'user_id' => 2,
@@ -51,7 +51,7 @@ class E_OrderSeeder extends Seeder
             ],
         ];
 
-        foreach($datas as $data) {
+        foreach ($datas as $data) {
             Order::create($data);
         }
     }
