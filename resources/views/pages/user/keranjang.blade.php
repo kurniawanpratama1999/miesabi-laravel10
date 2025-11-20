@@ -5,45 +5,32 @@
 @section('section')
     <main style="height: calc(100dvh - 3.5rem);" class="row overflow-hidden container-fluid mx-auto bg-young-brown">
         <section style="height: calc(100dvh - 3.5rem);" class="col-7 overflow-y-auto row gap-4 p-4 justify-content-evenly">
-            @foreach ($arr as $produk)
-            <script>
-                console.log({{ Js::from($produk) }})
-            </script>
+            @foreach ($arr as $product)
             <div style="" class="col-4 bg-white p-2 ">
                 <div style="aspect-ratio: 1/1;" class="border"></div>
                 <div class="p-3">
-                    <span class="text-center fw-bold d-block">{{ $produk[0]->name }}</span>
+                    <span class="text-center fw-bold d-block">{{ $product->name }}</span>
 
-                    @if (count($produk[0]->variants) > 0)
+                    @if (count($product->variants) > 0)
                     <div class="d-flex flex-column mt-3 gap-3">
                         <span class="text-center">Pilih Varian</span>
-                        @foreach ($produk[0]->variants as $variant)
+                        @foreach ($product->variants as $variant)
                             <div class="d-flex align-items-center justify-content-between">
                                 <span class="px-3 py-1 rounded-5 bg-old-brown text-white">{{ $variant->name }}</span>
                                 <div class="d-flex gap-2 justify-content-center">
-                                    {{-- <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-minus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                                    <input id="input-variant-{{ $produk[0]->name }}-{{ $variant->name }}"  type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="0">
-                                    <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-plus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button> --}}
-
-                                    <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-minus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                                    <input id="input-variant-{{ $produk[0]->name }}-{{ $variant->name }}"  type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="0">
-                                    <button id="btn-variant-{{ $produk[0]->name }}-{{ $variant->name }}-plus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                                    <button onclick="handleDecrementVariant(event,{{ $product->id }}, {{ $variant->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                                    <input id="variant-{{ $product->id }}-{{ $variant->id }}" type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $variant->qty ?? 0 }}">
+                                    <button onclick="handleIncrementVariant(event,{{ $product->id }}, {{ $variant->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                     @endif
-                    @php
-                         $qty = array_values(array_filter($datas, fn ($v) => $v['id'] == $produk[0]->id));
-                    @endphp
-                    <div class="d-flex gap-2 justify-content-center mt-3">
-                        {{-- <button id="btn-product-{{ $produk[0]->name }}-minus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                        <input id="input-product-{{ $produk[0]->name }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $qty[0]['qty'] ?? 0 }}">
-                        <button id="btn-product-{{ $produk[0]->name }}-plus" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button> --}}
 
-                        <button onclick="handleDecrementProduct(event)"  type="button" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                        <input  type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $qty[0]['qty'] ?? 0 }}">
-                        <button onclick="handleIncrementProduct(event)"  style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                    <div class="d-flex gap-2 justify-content-center mt-3">
+                        <button onclick="handleDecrementProduct(event, {{ $product->id }})"  type="button" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                        <input id="product-{{ $product->id }}"  type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $product->qty }}">
+                        <button onclick="handleIncrementProduct(event, {{ $product->id }})"  style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
                     </div>
                 </div>
             </div>
@@ -54,35 +41,31 @@
             <span class="d-block text-center fs-6">Silakan pilih cara yang paling nyaman untuk menerima pesanan anda</span>
 
             <div class="d-flex justify-content-center gap-5 mt-3">
-                <div>
-                    <div style="width: 150px; height: 150px;" class="border mb-2">
+                @foreach ($delivery_methods as $delivery)
+                <div onclick="handleClickDelivery({{ $delivery->id }})">
+                    <div style="width: 80px; height: 80px;" class="border mb-2">
 
                     </div>
-                    <span class="d-block text-center">Ambil di Gerai</span>
+                    <span class="d-block text-center">{{ $delivery->name }}</span>
                 </div>
-                <div>
-                    <div style="width: 150px; height: 150px;" class="border mb-2">
-
-                    </div>
-                    <span class="d-block text-center">Antar ke Lokasi</span>
-                </div>
+                @endforeach
             </div>
 
             <form class="mt-4 d-flex flex-column gap-4">
-                <label for="" class="d-flex flex-column gap-1 ">
+                <label for="note" class="d-flex flex-column gap-1 ">
                     <span>Catatan Tambahan</span>
-                    <textarea name="" id="" style="outline: 0; resize: none;" class="p-2 border-0"></textarea>
+                    <textarea name="note" id="note" style="outline: 0; resize: none;" class="p-2 border-0"></textarea>
                 </label>
-                <label for="" class="d-flex flex-column gap-1 ">
+                <label for="address" class="d-flex flex-column gap-1 ">
                     <span>Alamat Lengkap</span>
-                    <textarea name="" id="" style="outline: 0; resize: none;" class="p-2 border-0"></textarea>
+                    <textarea name="address" id="address" style="outline: 0; resize: none;" class="p-2 border-0"></textarea>
                 </label>
-                <label for="" class="d-flex flex-column gap-1 ">
+                <label for="phone" class="d-flex flex-column gap-1 ">
                     <span>No. Telp / Whatsapp</span>
-                    <input type="text" name="" id="" style="outline: 0; resize: none;" class="p-2 border-0" maxlength="13">
+                    <input type="text" name="phone" id="phone" style="outline: 0; resize: none;" class="p-2 border-0" maxlength="13">
                 </label>
 
-                <button type="submit" class="btn bg-old-brown text-white rounded-0">Chekout</button>
+                <button type="button" onclick="checkout()" class="btn bg-old-brown text-white rounded-0">Chekout</button>
             </form>
         </section>-
     </main>
@@ -90,22 +73,174 @@
 
 @pushOnce('scripts')
 <script>
-    function handleDecrementProduct (event) {
-        const parent = event.target.closest('div')
-        const inputElement = parent.querySelector('input')
-        const inputVal = parseInt(inputElement.value)
+    const delivery_id = {value: 1};
+    let datas = {{ Js::from($arr) }}
+    datas = datas.filter((p) => {
+        const productQty = p.qty
+        const variantQty = p.variants.reduce((a, b) => a + (b.qty ?? 0) , 0)
+        const totalQty = productQty + variantQty
+        return totalQty !== 0
+    })
 
-        if (inputVal > 0) {
-            inputElement.value = parseInt(inputElement.value) - 1;
+    function generateQtyForInput () {
+        for(const product of datas) {
+            const inputQtyProductElement = document.getElementById('product-' + product.id)
+
+            for (const variant of product.variants) {
+                const inputQtyVariantElement = document.getElementById(`variant-${product.id}-${variant.id}`)
+                inputQtyVariantElement.value = variant.qty ?? 0
+            }
+
+            inputQtyProductElement.value = product.qty
         }
     }
 
-    function handleIncrementProduct (event) {
-        const parent = event.target.closest('div')
-        const inputElement = parent.querySelector('input')
+    function handleDecrementProduct (event, id) {
+        const inputElement = document.getElementById('product-' + id)
         const inputVal = parseInt(inputElement.value)
-        
-            inputElement.value = parseInt(inputElement.value) + 1;
+
+        if (inputVal > 0) {
+            const findById = datas.find(p => p.id == id)
+            if (findById && findById.qty > 0) {
+                findById.qty -= 1
+                inputElement.value = findById.qty
+            }
+        }
     }
+
+    function handleIncrementProduct (event, id) {
+        const inputElement = document.getElementById('product-' + id)
+        const inputVal = parseInt(inputElement.value)
+
+        if (inputVal >= 0) {
+            const findById = datas.find(p => p.id == id)
+            if (findById && findById.qty >= 0) {
+                findById.qty += 1
+                inputElement.value = findById.qty
+            }
+        }
+    }
+
+    function handleDecrementVariant(event, productID, variantID){
+        const inputElement = document.getElementById(`variant-${productID}-${variantID}`)
+        const productIndex = datas.findIndex(p => p.id == productID)
+        if (productIndex === -1) return
+
+        const variantIndex = datas[productIndex].variants.findIndex(v => v.id == variantID)
+        if (variantIndex === -1) return
+
+        const oldVariant = datas[productIndex].variants[variantIndex]
+
+        const newQty = (oldVariant.qty ?? 0) - 1
+        const qty = Math.max(newQty, 0)
+        datas[productIndex].variants[variantIndex] = {
+            ...oldVariant,
+            qty // optional: biar tidak minus
+        }
+        inputElement.value = qty
+    }
+
+    function handleIncrementVariant(event, productID, variantID){
+        const inputElement = document.getElementById(`variant-${productID}-${variantID}`)
+        const productIndex = datas.findIndex(p => p.id == productID)
+        if (productIndex === -1) return
+
+        const variantIndex = datas[productIndex].variants.findIndex(v => v.id == variantID)
+        if (variantIndex === -1) return
+
+        const countVariantsQty = datas[productIndex].variants.reduce((a, b) => a + (b.qty ?? 0), 0)
+
+        if (countVariantsQty >= datas[productIndex].qty) return;
+        const oldVariant = datas[productIndex].variants[variantIndex]
+
+        const newQty = (oldVariant.qty ?? 0) + 1
+        const qty = Math.max(newQty, 0)
+        datas[productIndex].variants[variantIndex] = {
+            ...oldVariant,
+            qty // optional: biar tidak minus
+        }
+
+        inputElement.value = qty
+    }
+
+    function handleClickDelivery (id) {
+        delivery_id.value = id
+    }
+
+
+    async function checkout () {
+        let withVariant = [];
+        let withNoVariant = [];
+        for (let product of datas) {
+            const countVariants = product.variants.length 
+
+           if (countVariants <= 0) {
+                withNoVariant.push({
+                    product_id: product.id,
+                    variant_id: 0,
+                    merge: `${product.id}-0`,
+                    qty: product.qty
+                })
+            } else {
+                for (let variant of product.variants) {
+                    withVariant.push({
+                        product_id: product.id,
+                        variant_id: variant.id,
+                        merge: `${product.id}-${variant.id}`,
+                        qty: (variant.qty ?? 0)
+                    })
+                }
+            }
+        }
+
+        if (withNoVariant.length < 1) {
+            for (let product of datas) {
+                const countVariants = product.variants.length 
+                if (countVariants > 0) {
+                    withNoVariant.push({
+                        product_id: product.id,
+                        variant_id: 0,
+                        merge: `${product.id}-0`,
+                        qty: product.qty
+                    })
+                }
+            }
+        }
+        
+        let order_details = [...withVariant, ...withNoVariant]
+
+        let orders = {
+            user_id: 1,
+            delivery_id: delivery_id.value,
+            code: '',
+            payment_with: 'tunai',
+            payment_status: 'keranjang',
+            order_status: 'menunggu',
+            note: document.getElementById('note').value,
+            address: document.getElementById('address').value,
+            phone: document.getElementById('phone').value
+        }
+
+        const sendToCheckOut = {
+            orders,
+            order_details
+        }
+
+        const api = await fetch('/user/checkout', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+            },
+            body: JSON.stringify({datas: sendToCheckOut})
+        })
+
+        const res = await api.json();
+        if (res.success) {
+            location.href = '/user/checkout'
+        }
+    }
+
+    generateQtyForInput()
 </script>
 @endPushOnce

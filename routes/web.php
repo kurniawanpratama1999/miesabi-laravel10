@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Guest\{LoginController, RegisterController};
 use App\Http\Controllers\{CategoryController, DeliveryController, VariantController, ProductController};
-use App\Http\Controllers\User\{MenuController, KeranjangController};
+use App\Http\Controllers\User\{MenuController, KeranjangController, CheckoutController};
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('pages.guest.index'));
@@ -22,4 +22,5 @@ Route::resource('product', ProductController::class);
 Route::prefix('{admin}')->group(function () {
     Route::resource('menu', MenuController::class);
     Route::resource('keranjang', KeranjangController::class);
+    Route::resource('checkout', CheckoutController::class);
 });

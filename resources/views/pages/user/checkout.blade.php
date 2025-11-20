@@ -6,7 +6,6 @@
     <main style="min-height: calc(100dvh - 3.5rem);" class="row overflow-hidden container-fluid mx-auto bg-young-brown">
         <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.7);" class="mx-auto py-4">
             <h4>Rincian Harga</h4>
-
             <div>
                 <h5>Total Pesanan</h5>
                 <div class="d-flex flex-column gap-4">

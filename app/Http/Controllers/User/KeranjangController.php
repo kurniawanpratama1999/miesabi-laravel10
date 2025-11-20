@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryMethod;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -14,12 +15,17 @@ class KeranjangController extends Controller
         
         $arr = [];
         foreach($datas as $data) {
-            $arr[] = Product::with('variants')
+            $product = Product::with('variants')
                         ->where('id', '=', $data['id'])
-                        ->get();    
+                        ->first();
+
+            $product->setAttribute('qty', $data['qty']);
+
+            $arr[] = $product;
         }
 
-        return view('pages.user.keranjang', compact('arr', 'datas'));
+        $delivery_methods = DeliveryMethod::all();
+        return view('pages.user.keranjang', compact('arr', 'datas', 'delivery_methods'));
     }
     public function store(Request $req)
     {
