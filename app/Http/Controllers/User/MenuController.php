@@ -19,4 +19,16 @@ class MenuController extends Controller
 
         return view('pages.user.menu', compact('datas'));
     }
+
+    public function store(Request $req)
+    {
+        // UNTUK HADNLE CLICK KERANJANG
+        $datas = $req->input('datas');
+        session(['order_detail' => $datas]);
+
+        return response()->json([
+            'success' => true,
+            'datas' => $datas
+        ]);
+    }
 }

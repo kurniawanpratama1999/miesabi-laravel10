@@ -12,12 +12,12 @@ class KeranjangController extends Controller
     public function index()
     {
         $datas = session('order_detail');
-        
+
         $arr = [];
-        foreach($datas as $data) {
+        foreach ($datas as $data) {
             $product = Product::with('variants')
-                        ->where('id', '=', $data['id'])
-                        ->first();
+                ->where('id', '=', $data['id'])
+                ->first();
 
             $product->setAttribute('qty', $data['qty']);
 
@@ -27,14 +27,13 @@ class KeranjangController extends Controller
         $delivery_methods = DeliveryMethod::all();
         return view('pages.user.keranjang', compact('arr', 'datas', 'delivery_methods'));
     }
+
     public function store(Request $req)
     {
+        // UNTUK HANDLE CLICK CHECKOUT
         $datas = $req->input('datas');
-        session(['order_detail' => $datas]);
+        session(['checkout' => $datas]);
 
-        return response()->json([
-            'success' => true,
-            'datas' => $datas
-        ]);
+        return response()->json(['success' => true]);
     }
 }

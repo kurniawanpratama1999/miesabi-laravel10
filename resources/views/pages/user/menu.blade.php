@@ -89,7 +89,7 @@
 
             if (calcQty <= 0) return;
 
-            const api = await fetch('/user/keranjang', {
+            const api = await fetch('/user/menu', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -99,7 +99,7 @@
             });
 
             const res = await api.json()
-
+            console.log(res)
             if (res.success) {
                 location.href = '/user/keranjang'
             }

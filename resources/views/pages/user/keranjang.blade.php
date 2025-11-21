@@ -50,6 +50,16 @@
                 </div>
                 @endforeach
             </div>
+            <div class="d-flex justify-content-center gap-5 mt-3">
+                @foreach (['qris', 'tunai'] as $payment)
+                <div onclick="handleClickPayment('{{ $payment }}')">
+                    <div style="width: 80px; height: 40px;" class="border mb-2">
+
+                    </div>
+                    <span class="d-block text-center">{{ $payment }}</span>
+                </div>
+                @endforeach
+            </div>
 
             <form class="mt-4 d-flex flex-column gap-4">
                 <label for="note" class="d-flex flex-column gap-1 ">
@@ -74,6 +84,7 @@
 @pushOnce('scripts')
 <script>
     const delivery_id = {value: 1};
+    const payment_method = {value: 'qris'}
     let datas = {{ Js::from($arr) }}
     datas = datas.filter((p) => {
         const productQty = p.qty
@@ -167,61 +178,85 @@
         delivery_id.value = id
     }
 
+    function handleClickPayment(method) {
+        payment_method.value = method
+    }
+
+    function flattenProducts(products) {
+        let result = [];
+
+        products.forEach(prod => {
+            let productQty = prod.qty;
+
+            if (!prod.variants || prod.variants.length === 0) {
+                result.push({
+                    product_id: prod.id,
+                    variant_id: null,
+                    merge: `${prod.id}-0`,
+                    qty: productQty
+                });
+                return;
+            }
+
+            let variantsWithQty = [];
+            let totalVariantQty = 0;
+
+            prod.variants.forEach((v, i) => {
+                if (v.qty && v.qty > 0) {
+                    variantsWithQty.push({
+                        product_id: prod.id,
+                        variant_id: v.id,
+                        merge: `${prod.id}-${v.id}`,
+                        qty: v.qty
+                    });
+                    totalVariantQty += v.qty;
+                }
+            });
+
+            let remainingQty = productQty - totalVariantQty;
+
+            result.push(...variantsWithQty);
+
+            if (remainingQty > 0) {
+                const firstVariant = prod.variants[0];
+
+                result.push({
+                    product_id: prod.id,
+                    variant_id: firstVariant.id,
+                    merge: `${prod.id}-${firstVariant.id}`,
+                    qty: remainingQty
+                });
+            }
+        });
+
+
+        const new_result = Object.values(
+            result.reduce((acc, item) => {
+                const key = `${item.product_id}-${item.variant_id ?? 0}`;
+
+                if (!acc[key]) {
+                    acc[key] = { ...item }; // clone
+                } else {
+                    acc[key].qty += item.qty; // tambah qty
+                }
+
+                return acc;
+            }, {})
+        );
+
+        return new_result;
+    }
+
 
     async function checkout () {
         let copyDatas = [...datas];
-        let productWithVariant = [];
-        let productNoVariant = [];
-
-        for (let p = 0; p < copyDatas.length; p++) {
-            const productVariant = copyDatas[p].variants
-            const countVariants = productVariant.length 
-
-            if (countVariants) {
-                for (const pv of productVariant) {
-                    if (pv.qty) {
-                        productWithVariant.push({
-                            product_id: copyDatas[p].id,
-                            variant_id: pv.id,
-                            merge: `${copyDatas[p].id}-${pv.id}`,
-                            qty: pv.qty
-                        })
-
-                        copyDatas[p].qty -= pv.qty
-                    }
-
-                }
-            } else {
-                productNoVariant.push({
-                    product_id: copyDatas[p].id,
-                    variant_id: 0,
-                    merge: `${copyDatas[p].id}-0`,
-                    qty: copyDatas[p].qty
-                })
-            }
-        }
-
-        for (let p = 0; p < copyDatas.length; p++) {
-            const productVariant = copyDatas[p].variants
-            const countVariants = productVariant.length
-            
-
-            if (countVariants) {
-                for (let pv = 0; pv < copyDatas[p].qty; pv++) {
-                    // LANJUTIN NJINK
-                }
-            }
-        }
-
-        console.log({productWithVariant, productNoVariant})
-        
-        let order_details = [...productWithVariant, ...productNoVariant]
-
+        let order_details = flattenProducts(copyDatas)
+        alert(delivery_id.value)
         let orders = {
             user_id: 1,
             delivery_id: delivery_id.value,
             code: '',
-            payment_with: 'tunai',
+            payment_with: payment_method.value,
             payment_status: 'keranjang',
             order_status: 'menunggu',
             note: document.getElementById('note').value,
@@ -234,19 +269,19 @@
             order_details
         }
 
-        // const api = await fetch('/user/checkout', {
-        //     method: 'POST',
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
-        //     },
-        //     body: JSON.stringify({datas: sendToCheckOut})
-        // })
+        const api = await fetch('/user/keranjang', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+            },
+            body: JSON.stringify({datas: sendToCheckOut})
+        })
 
-        // const res = await api.json();
-        // if (res.success) {
-        //     location.href = '/user/checkout'
-        // }
+        const res = await api.json();
+        if (res.success) {
+            location.href = '/user/checkout'
+        }
     }
 
     generateQtyForInput()

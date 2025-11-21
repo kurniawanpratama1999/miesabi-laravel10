@@ -6,6 +6,7 @@ use App\Http\Controllers\User\{MenuController, KeranjangController, CheckoutCont
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('pages.guest.index'));
+// Route::get('/', [MenuController::class, 'index']);
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.process');
