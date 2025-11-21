@@ -169,45 +169,53 @@
 
 
     async function checkout () {
-        let withVariant = [];
-        let withNoVariant = [];
-        for (let product of datas) {
-            const countVariants = product.variants.length 
+        let copyDatas = [...datas];
+        let productWithVariant = [];
+        let productNoVariant = [];
 
-           if (countVariants <= 0) {
-                withNoVariant.push({
-                    product_id: product.id,
-                    variant_id: 0,
-                    merge: `${product.id}-0`,
-                    qty: product.qty
-                })
+        for (let p = 0; p < copyDatas.length; p++) {
+            const productVariant = copyDatas[p].variants
+            const countVariants = productVariant.length 
+
+            if (countVariants) {
+                for (const pv of productVariant) {
+                    if (pv.qty) {
+                        productWithVariant.push({
+                            product_id: copyDatas[p].id,
+                            variant_id: pv.id,
+                            merge: `${copyDatas[p].id}-${pv.id}`,
+                            qty: pv.qty
+                        })
+
+                        copyDatas[p].qty -= pv.qty
+                    }
+
+                }
             } else {
-                for (let variant of product.variants) {
-                    withVariant.push({
-                        product_id: product.id,
-                        variant_id: variant.id,
-                        merge: `${product.id}-${variant.id}`,
-                        qty: (variant.qty ?? 0)
-                    })
+                productNoVariant.push({
+                    product_id: copyDatas[p].id,
+                    variant_id: 0,
+                    merge: `${copyDatas[p].id}-0`,
+                    qty: copyDatas[p].qty
+                })
+            }
+        }
+
+        for (let p = 0; p < copyDatas.length; p++) {
+            const productVariant = copyDatas[p].variants
+            const countVariants = productVariant.length
+            
+
+            if (countVariants) {
+                for (let pv = 0; pv < copyDatas[p].qty; pv++) {
+                    // LANJUTIN NJINK
                 }
             }
         }
 
-        if (withNoVariant.length < 1) {
-            for (let product of datas) {
-                const countVariants = product.variants.length 
-                if (countVariants > 0) {
-                    withNoVariant.push({
-                        product_id: product.id,
-                        variant_id: 0,
-                        merge: `${product.id}-0`,
-                        qty: product.qty
-                    })
-                }
-            }
-        }
+        console.log({productWithVariant, productNoVariant})
         
-        let order_details = [...withVariant, ...withNoVariant]
+        let order_details = [...productWithVariant, ...productNoVariant]
 
         let orders = {
             user_id: 1,
@@ -226,19 +234,19 @@
             order_details
         }
 
-        const api = await fetch('/user/checkout', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
-            },
-            body: JSON.stringify({datas: sendToCheckOut})
-        })
+        // const api = await fetch('/user/checkout', {
+        //     method: 'POST',
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+        //     },
+        //     body: JSON.stringify({datas: sendToCheckOut})
+        // })
 
-        const res = await api.json();
-        if (res.success) {
-            location.href = '/user/checkout'
-        }
+        // const res = await api.json();
+        // if (res.success) {
+        //     location.href = '/user/checkout'
+        // }
     }
 
     generateQtyForInput()
