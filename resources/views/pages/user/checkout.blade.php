@@ -10,13 +10,13 @@
                 <h5>Total Pesanan</h5>
                 <div class="d-flex flex-column gap-4">
 
-                    @foreach($arr as $product)
+                    @foreach($orderDetails as $product)
                     <div class="row justify-content-between">
                         <div class="d-flex flex-column gap-1 col-6">
                             <span>{{ $product->name }} {{ $product->variant_name ?? "" }}</span>
                         </div>
                         <div class="col-6 row">
-                            <span class="col-6">x{{ $product->qty }}</span>
+                            <span class="col-6">x{{ $product->quantity }}</span>
                             <span class="col-6">{{ $product->total }}</span>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
 
             @php
                 $biayaPengiriman = $delivery->price;
-                $totalPesanan = collect($arr)->sum('total');
+                $totalPesanan = collect($orderDetails)->sum('total');
                 $totalPembayaran = $biayaPengiriman + $totalPesanan;
             @endphp
             <div class="mt-5">
@@ -66,7 +66,7 @@
 @pushOnce('scripts')
 <script>
     async function makeOrder() {
-        const api = await fetch('/user/checkout', {
+        const api = await fetch('/checkout', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -76,8 +76,8 @@
         const res = await api.json();
         console.log(res)
 
-        if (!res.success) {
-            location.href = '/user/scanqr'
+        if (res.success) {
+            location.href = res.redirect
         }
     }
 </script>

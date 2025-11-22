@@ -7,19 +7,20 @@
     <section class="p-4 row gap-4 justify-content-evenly container-fluid">
         <span class="fw-bold fs-3 text-old-brown">Daftar Menu</span>
         <div class="row gap-3 justify-content-evenly">
-            @foreach ($datas as $product)
-                <div style="" class="col-2 bg-white p-2">
-                    <div style="aspect-ratio: 1/1;" class="border"></div>
+            @foreach ($dbTableProducts as $product)
+                <div id="product-{{ $product->id }}" class="col-2 bg-white p-2">
+                    <div id="p-image" style="aspect-ratio: 1/1;" class="border"></div>
                     <div class="p-3">
                         <div class="d-flex flex-column">
-                            <span class="text-center fw-bold">{{ $product->name }}</span>
-                            <span class="text-center">{{ $product->price }}</span>
+                            <span id="p-name" class="text-center fw-bold">{{ $product->name }}</span>
+                            <span id="p-category" class="text-center fw-bold d-none">{{ $product->category_name }}</span>
+                            <span id="p-price" class="text-center">{{ $product->price }}</span>
                         </div>
 
                         <div class="d-flex gap-2 justify-content-center mt-3">
-                            <button onclick="handleDecrement({{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                            <input id="qty-{{ $product->id }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0">
-                            <button onclick="handleIncrement({{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                            <button onclick="handleProductCounter('-', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                            <input id="p-quantity-{{ $product->id }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0" autocomplete="off">
+                            <button onclick="handleProductCounter('+', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
                         </div>
                     </div>
                 </div>
@@ -32,76 +33,71 @@
 
 @pushOnce('scripts')
     <script>
-        const cart = {value: []}
+        const arrKeranjang = {value: []}
 
-        const changeKeranjangPopup = (isActive = false) => {
-            const keranjangElement = document.getElementById('keranjang')
-
-            if(isActive) {
-                keranjangElement.classList.remove('d-none');
+        const changeKeranjangPopup = () => {
+            const getKeranjangElement = document.getElementById('keranjang')
+            const countingQuantity = arrKeranjang.value.reduce((a, b) => a + b.quantity, 0)
+            if(countingQuantity) {
+                // tampilkan
+                getKeranjangElement.classList.remove('d-none');
             } else {
-                keranjangElement.classList.add('d-none');
+                // sembunyikan
+                getKeranjangElement.classList.add('d-none');
             }
 
-            keranjangElement.querySelector('span').innerHTML = cart.value.reduce((a, b) => a + b.qty, 0)
+            getKeranjangElement.querySelector('span').innerHTML = arrKeranjang.value.reduce((a, b) => a + b.quantity, 0)
 
         }
 
-        function handleIncrement(id){
-            const inputQtyElement = document.getElementById(`qty-${id}`);
-            inputQtyElement.value = parseInt(inputQtyElement.value) + 1
-            const findById = cart.value.find(v => v.id == id)
-            if (findById) {
-                findById.qty += 1
-            } else {
-                cart.value.push({id, variant_id: null, qty: 1})
-            }
-
-            changeKeranjangPopup(true)
-
-            console.log(cart)
-        }
-
-        function handleDecrement(id){
-            const inputQtyElement = document.getElementById(`qty-${id}`);
-
-            if (inputQtyElement.value > 0) {
-                inputQtyElement.value = parseInt(inputQtyElement.value) - 1
-
-                const findById = cart.value.find(v => v.id == id)
-                if (findById && findById.qty > 0) {
-                    findById.qty -= 1
+        function handleProductCounter(operator, id){
+            const inputQuantityElement = document.getElementById(`p-quantity-${id}`);
+            const findProductByID = arrKeranjang.value.find(v => v.id == id)
+            if (operator === "+") {
+                if (findProductByID) {
+                    findProductByID.quantity += 1;
+                    inputQuantityElement.value = findProductByID.quantity
                 } else {
-                    cart.value.push({id, variant_id: null, qty: 1})
+                    const productElement = document.getElementById(`product-${id}`)
+                    const nameContent = productElement.querySelector('#p-name').textContent
+                    const categoryContent = productElement.querySelector('#p-category').textContent
+                    const priceContent = productElement.querySelector('#p-price').textContent
+
+                    arrKeranjang.value = [...arrKeranjang.value, {id, variant_id: null, quantity: 1}];
+                    const secondfindProductByID = arrKeranjang.value.find(v => v.id == id)
+
+                    inputQuantityElement.value = secondfindProductByID.quantity
                 }
+
+            } else if (operator === "-") {
+                if (findProductByID && findProductByID.quantity > 0) {
+                    findProductByID.quantity -= 1;
+                    inputQuantityElement.value = findProductByID.quantity
+                }
+                
             }
 
-            const calcQty = cart.value.reduce((a, b) => a + b.qty, 0);
-            if (calcQty <= 0) {
-                changeKeranjangPopup(false)
-            } else {
-                changeKeranjangPopup(true)
-            }
+            changeKeranjangPopup()
         }
 
         async function goToKeranjang () {
-            const calcQty = cart.value.reduce((a, b) => a + b.qty, 0);
+            const countingQuantity = arrKeranjang.value.reduce((a, b) => a + b.quantity, 0);
 
-            if (calcQty <= 0) return;
+            if (!countingQuantity) return;
 
-            const api = await fetch('/user/menu', {
+            const HIT_API = await fetch('/menu', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                 },
-                body: JSON.stringify({ datas: cart.value })
+                body: JSON.stringify({ payloadMenuToKeranjang: arrKeranjang.value })
             });
 
-            const res = await api.json()
+            const res = await HIT_API.json()
             console.log(res)
             if (res.success) {
-                location.href = '/user/keranjang'
+                location.href = res.redirect
             }
         }
     </script>

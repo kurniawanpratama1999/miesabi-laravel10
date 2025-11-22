@@ -5,7 +5,7 @@
 @section('section')
     <main style="height: calc(100dvh - 3.5rem);" class="row overflow-hidden container-fluid mx-auto bg-young-brown">
         <section style="height: calc(100dvh - 3.5rem);" class="col-7 overflow-y-auto row gap-4 p-4 justify-content-evenly">
-            @foreach ($arr as $product)
+            @foreach ($getProducts as $product)
             <div style="" class="col-4 bg-white p-2 ">
                 <div style="aspect-ratio: 1/1;" class="border"></div>
                 <div class="p-3">
@@ -18,9 +18,9 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <span class="px-3 py-1 rounded-5 bg-old-brown text-white">{{ $variant->name }}</span>
                                 <div class="d-flex gap-2 justify-content-center">
-                                    <button onclick="handleDecrementVariant(event,{{ $product->id }}, {{ $variant->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                                    <input id="variant-{{ $product->id }}-{{ $variant->id }}" type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $variant->qty ?? 0 }}">
-                                    <button onclick="handleIncrementVariant(event,{{ $product->id }}, {{ $variant->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                                    <button onclick="handleVariantCounter(event,{{ $product->id }}, {{ $variant->id }}, '-')" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                                    <input id="variant-{{ $product->id }}-{{ $variant->id }}" type="number" style="width: 20px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $variant->quantity ?? 0 }}">
+                                    <button onclick="handleVariantCounter(event,{{ $product->id }}, {{ $variant->id }}, '+')" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
                                 </div>
                             </div>
                         @endforeach
@@ -28,9 +28,9 @@
                     @endif
 
                     <div class="d-flex gap-2 justify-content-center mt-3">
-                        <button onclick="handleDecrementProduct(event, {{ $product->id }})"  type="button" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                        <input id="product-{{ $product->id }}"  type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $product->qty }}">
-                        <button onclick="handleIncrementProduct(event, {{ $product->id }})"  style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                        <button onclick="handleProductCounter(event, {{ $product->id }}, '-')"  type="button" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                        <input id="product-{{ $product->id }}"  type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="{{ $product->quantity }}">
+                        <button onclick="handleProductCounter(event, {{ $product->id }}, '+')"  style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
             <span class="d-block text-center fs-6">Silakan pilih cara yang paling nyaman untuk menerima pesanan anda</span>
 
             <div class="d-flex justify-content-center gap-5 mt-3">
-                @foreach ($delivery_methods as $delivery)
+                @foreach ($getDeliveryMethods as $delivery)
                 <div onclick="handleClickDelivery({{ $delivery->id }})">
                     <div style="width: 80px; height: 80px;" class="border mb-2">
 
@@ -85,93 +85,73 @@
 <script>
     const delivery_id = {value: 1};
     const payment_method = {value: 'qris'}
-    let datas = {{ Js::from($arr) }}
-    datas = datas.filter((p) => {
-        const productQty = p.qty
-        const variantQty = p.variants.reduce((a, b) => a + (b.qty ?? 0) , 0)
-        const totalQty = productQty + variantQty
-        return totalQty !== 0
+
+    let getProducts = {{ Js::from($getProducts) }}
+
+    getProducts = getProducts.filter((product) => {
+        const productQuantity = product.quantity
+        const variantQuantity = product.variants.reduce((a, b) => a + (b.quantity ?? 0) , 0)
+        const totalQuantity = productQuantity + variantQuantity
+        return totalQuantity !== 0
     })
 
-    function generateQtyForInput () {
-        for(const product of datas) {
-            const inputQtyProductElement = document.getElementById('product-' + product.id)
+    function generateQuantityForInput () {
+        for(const product of getProducts) {
+            const inputQuantityProductElement = document.getElementById('product-' + product.id)
 
             for (const variant of product.variants) {
-                const inputQtyVariantElement = document.getElementById(`variant-${product.id}-${variant.id}`)
-                inputQtyVariantElement.value = variant.qty ?? 0
+                const inputQuantityVariantElement = document.getElementById(`variant-${product.id}-${variant.id}`)
+                inputQuantityVariantElement.value = variant.quantity ?? 0
             }
 
-            inputQtyProductElement.value = product.qty
+            inputQuantityProductElement.value = product.quantity
         }
     }
 
-    function handleDecrementProduct (event, id) {
+    function handleProductCounter (event, id, operator) {
         const inputElement = document.getElementById('product-' + id)
         const inputVal = parseInt(inputElement.value)
+        const findById = getProducts.find(p => product.id == id)
 
-        if (inputVal > 0) {
-            const findById = datas.find(p => p.id == id)
-            if (findById && findById.qty > 0) {
-                findById.qty -= 1
-                inputElement.value = findById.qty
-            }
+        if (!findById) return
+
+        if (operator == "+" && findById.quantity >= 0 && inputVal >= 0) {
+            findById.quantity += 1
+        } else if (operator == "-" && findById.quantity > 0 && inputVal > 0) {
+            findById.quantity -= 1
         }
+
+        inputElement.value = findById.quantity
     }
 
-    function handleIncrementProduct (event, id) {
-        const inputElement = document.getElementById('product-' + id)
-        const inputVal = parseInt(inputElement.value)
-
-        if (inputVal >= 0) {
-            const findById = datas.find(p => p.id == id)
-            if (findById && findById.qty >= 0) {
-                findById.qty += 1
-                inputElement.value = findById.qty
-            }
-        }
-    }
-
-    function handleDecrementVariant(event, productID, variantID){
+    function handleVariantCounter (event, productID, variantID, operator) {
         const inputElement = document.getElementById(`variant-${productID}-${variantID}`)
-        const productIndex = datas.findIndex(p => p.id == productID)
+        const productIndex = getProducts.findIndex(p => product.id == productID)
         if (productIndex === -1) return
 
-        const variantIndex = datas[productIndex].variants.findIndex(v => v.id == variantID)
+        const variants = getProducts[productIndex].variants
+        
+        const variantIndex = getProducts[productIndex].variants.findIndex(v => v.id == variantID)
         if (variantIndex === -1) return
 
-        const oldVariant = datas[productIndex].variants[variantIndex]
+        const oldVariant = variants[variantIndex]
 
-        const newQty = (oldVariant.qty ?? 0) - 1
-        const qty = Math.max(newQty, 0)
-        datas[productIndex].variants[variantIndex] = {
-            ...oldVariant,
-            qty // optional: biar tidak minus
+        let newQuantity = oldVariant.quantity ?? 0;
+        if(operator === "+") {
+            const countVariantsQuantity = variants.reduce((a, b) => a + (b.quantity ?? 0), 0)
+            if (countVariantsQuantity >= getProducts[productIndex].quantity) return;
+
+            newQuantity += 1
+        } else if (operator === "-") {
+            newQuantity -= 1
         }
-        inputElement.value = qty
-    }
-
-    function handleIncrementVariant(event, productID, variantID){
-        const inputElement = document.getElementById(`variant-${productID}-${variantID}`)
-        const productIndex = datas.findIndex(p => p.id == productID)
-        if (productIndex === -1) return
-
-        const variantIndex = datas[productIndex].variants.findIndex(v => v.id == variantID)
-        if (variantIndex === -1) return
-
-        const countVariantsQty = datas[productIndex].variants.reduce((a, b) => a + (b.qty ?? 0), 0)
-
-        if (countVariantsQty >= datas[productIndex].qty) return;
-        const oldVariant = datas[productIndex].variants[variantIndex]
-
-        const newQty = (oldVariant.qty ?? 0) + 1
-        const qty = Math.max(newQty, 0)
-        datas[productIndex].variants[variantIndex] = {
+        
+        const quantity = Math.max(newQuantity, 0)
+        variants[variantIndex] = {
             ...oldVariant,
-            qty // optional: biar tidak minus
+            quantity
         }
-
-        inputElement.value = qty
+        inputElement.value = quantity
     }
 
     function handleClickDelivery (id) {
@@ -186,45 +166,45 @@
         let result = [];
 
         products.forEach(prod => {
-            let productQty = prod.qty;
+            let productQuantity = prod.quantity;
 
             if (!prod.variants || prod.variants.length === 0) {
                 result.push({
                     product_id: prod.id,
                     variant_id: null,
                     merge: `${prod.id}-0`,
-                    qty: productQty
+                    quantity: productQuantity
                 });
                 return;
             }
 
-            let variantsWithQty = [];
-            let totalVariantQty = 0;
+            let variantsWithQuantity = [];
+            let totalVariantQuantity = 0;
 
             prod.variants.forEach((v, i) => {
-                if (v.qty && v.qty > 0) {
-                    variantsWithQty.push({
+                if (v.quantity && v.quantity > 0) {
+                    variantsWithQuantity.push({
                         product_id: prod.id,
                         variant_id: v.id,
                         merge: `${prod.id}-${v.id}`,
-                        qty: v.qty
+                        quantity: v.quantity
                     });
-                    totalVariantQty += v.qty;
+                    totalVariantQuantity += v.quantity;
                 }
             });
 
-            let remainingQty = productQty - totalVariantQty;
+            let remainingQuantity = productQuantity - totalVariantQuantity;
 
-            result.push(...variantsWithQty);
+            result.push(...variantsWithQuantity);
 
-            if (remainingQty > 0) {
+            if (remainingQuantity > 0) {
                 const firstVariant = prod.variants[0];
 
                 result.push({
                     product_id: prod.id,
                     variant_id: firstVariant.id,
                     merge: `${prod.id}-${firstVariant.id}`,
-                    qty: remainingQty
+                    quantity: remainingQuantity
                 });
             }
         });
@@ -237,7 +217,7 @@
                 if (!acc[key]) {
                     acc[key] = { ...item }; // clone
                 } else {
-                    acc[key].qty += item.qty; // tambah qty
+                    acc[key].quantity += item.quantity; // tambah quantity
                 }
 
                 return acc;
@@ -249,41 +229,41 @@
 
 
     async function checkout () {
-        let copyDatas = [...datas];
-        let order_details = flattenProducts(copyDatas)
-        alert(delivery_id.value)
+        let copygetProducts = [...getProducts];
+        let order_details = flattenProducts(copygetProducts)
         let orders = {
-            user_id: 1,
+            user_id: 2,
             delivery_id: delivery_id.value,
             code: '',
             payment_with: payment_method.value,
-            payment_status: 'keranjang',
-            order_status: 'menunggu',
-            note: document.getElementById('note').value,
-            address: document.getElementById('address').value,
-            phone: document.getElementById('phone').value
+            payment_status: '',
+            order_status: '',
+            note: "ABC",
+            address: "ABC",
+            phone: "ABC"
         }
 
-        const sendToCheckOut = {
+        const arrCheckout = {
             orders,
             order_details
         }
 
-        const api = await fetch('/user/keranjang', {
+        const HIT_API = await fetch('/keranjang', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
             },
-            body: JSON.stringify({datas: sendToCheckOut})
+
+            body: JSON.stringify({payloadKeranjangToCheckout: arrCheckout})
         })
 
-        const res = await api.json();
+        const res = await HIT_API.json();
         if (res.success) {
-            location.href = '/user/checkout'
+            location.href = res.redirect
         }
     }
 
-    generateQtyForInput()
+    generateQuantityForInput()
 </script>
 @endPushOnce

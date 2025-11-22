@@ -19,9 +19,7 @@ Route::resource('delivery', DeliveryController::class);
 Route::resource('variant', VariantController::class);
 Route::resource('product', ProductController::class);
 
-// ADMIN
-Route::prefix('{admin}')->group(function () {
-    Route::resource('menu', MenuController::class);
-    Route::resource('keranjang', KeranjangController::class);
-    Route::resource('checkout', CheckoutController::class);
-});
+// User
+Route::resource('menu', MenuController::class);
+Route::resource('keranjang', KeranjangController::class);
+Route::resource('checkout', CheckoutController::class);

@@ -11,29 +11,32 @@ class KeranjangController extends Controller
 {
     public function index()
     {
-        $datas = session('order_detail');
-
-        $arr = [];
-        foreach ($datas as $data) {
-            $product = Product::with('variants')
-                ->where('id', '=', $data['id'])
-                ->first();
-
-            $product->setAttribute('qty', $data['qty']);
-
-            $arr[] = $product;
+        $chosenProducts = session()->get('menuController.menuToKeranjang');
+        if (!$chosenProducts) {
+            return redirect()->route('menu.index');
         }
 
-        $delivery_methods = DeliveryMethod::all();
-        return view('pages.user.keranjang', compact('arr', 'datas', 'delivery_methods'));
+        $getProducts = [];
+        foreach ($chosenProducts as $chosenProduct) {
+            $findProduct = Product::with('variants')
+                ->where('id', '=', $chosenProduct['id'])
+                ->first();
+
+            $findProduct->setAttribute('quantity', $chosenProduct['quantity']);
+
+            $getProducts[] = $findProduct;
+        }
+
+        $getDeliveryMethods = DeliveryMethod::all();
+        return view('pages.user.keranjang', compact('getProducts', 'getDeliveryMethods'));
     }
 
     public function store(Request $req)
     {
         // UNTUK HANDLE CLICK CHECKOUT
-        $datas = $req->input('datas');
-        session(['checkout' => $datas]);
+        $payloadKeranjangToCheckout = $req->input('payloadKeranjangToCheckout');
+        session(['keranjangController.keranjangToCheckout' => $payloadKeranjangToCheckout]);
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'redirect' => '/checkout']);
     }
 }
