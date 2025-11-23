@@ -23,7 +23,7 @@
 @pushOnce('scripts')
     <script>
         async function sudahBayar(order_id) {
-            const HIT_API = await fetch(`/scanqr/${order_id}`,{
+            const HIT_API = await fetch(`/u/scanqr/${order_id}`,{
                 method: 'PUT',
                 headers: {
                     "Content-Type":"application/json",

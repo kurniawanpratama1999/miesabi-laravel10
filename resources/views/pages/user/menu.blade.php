@@ -17,11 +17,15 @@
                             <span id="p-price" class="text-center">{{ $product->price }}</span>
                         </div>
 
-                        <div class="d-flex gap-2 justify-content-center mt-3">
-                            <button onclick="handleProductCounter('-', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                            <input id="p-quantity-{{ $product->id }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0" autocomplete="off">
-                            <button onclick="handleProductCounter('+', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
-                        </div>
+                        @if(Auth::check())
+                            <div class="d-flex gap-2 justify-content-center mt-3">
+                                <button onclick="handleProductCounter('-', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
+                                <input id="p-quantity-{{ $product->id }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0" autocomplete="off">
+                                <button onclick="handleProductCounter('+', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                            </div>
+                        @else
+                            <a href="{{ route('login') }}" class="link-success text-center d-block mt-3">Beli</a>
+                        @endif
                     </div>
                 </div>
             @endforeach
@@ -33,26 +37,26 @@
 
 @pushOnce('scripts')
     <script>
-        const arrKeranjang = {value: []}
+        const arrCart = {value: []}
 
-        const changeKeranjangPopup = () => {
-            const getKeranjangElement = document.getElementById('keranjang')
-            const countingQuantity = arrKeranjang.value.reduce((a, b) => a + b.quantity, 0)
+        const changeCartPopup = () => {
+            const getCartElement = document.getElementById('cart')
+            const countingQuantity = arrCart.value.reduce((a, b) => a + b.quantity, 0)
             if(countingQuantity) {
                 // tampilkan
-                getKeranjangElement.classList.remove('d-none');
+                getCartElement.classList.remove('d-none');
             } else {
                 // sembunyikan
-                getKeranjangElement.classList.add('d-none');
+                getCartElement.classList.add('d-none');
             }
 
-            getKeranjangElement.querySelector('span').innerHTML = arrKeranjang.value.reduce((a, b) => a + b.quantity, 0)
+            getCartElement.querySelector('span').innerHTML = arrCart.value.reduce((a, b) => a + b.quantity, 0)
 
         }
 
         function handleProductCounter(operator, id){
             const inputQuantityElement = document.getElementById(`p-quantity-${id}`);
-            const findProductByID = arrKeranjang.value.find(v => v.id == id)
+            const findProductByID = arrCart.value.find(v => v.id == id)
             if (operator === "+") {
                 if (findProductByID) {
                     findProductByID.quantity += 1;
@@ -63,8 +67,8 @@
                     const categoryContent = productElement.querySelector('#p-category').textContent
                     const priceContent = productElement.querySelector('#p-price').textContent
 
-                    arrKeranjang.value = [...arrKeranjang.value, {id, variant_id: null, quantity: 1}];
-                    const secondfindProductByID = arrKeranjang.value.find(v => v.id == id)
+                    arrCart.value = [...arrCart.value, {id, variant_id: null, quantity: 1}];
+                    const secondfindProductByID = arrCart.value.find(v => v.id == id)
 
                     inputQuantityElement.value = secondfindProductByID.quantity
                 }
@@ -77,25 +81,24 @@
                 
             }
 
-            changeKeranjangPopup()
+            changeCartPopup()
         }
 
-        async function goToKeranjang () {
-            const countingQuantity = arrKeranjang.value.reduce((a, b) => a + b.quantity, 0);
+        async function goToCart () {
+            const countingQuantity = arrCart.value.reduce((a, b) => a + b.quantity, 0);
 
             if (!countingQuantity) return;
 
-            const HIT_API = await fetch('/menu', {
+            const HIT_API = await fetch('/u/menu', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                 },
-                body: JSON.stringify({ payloadMenuToKeranjang: arrKeranjang.value })
+                body: JSON.stringify({ payloadMenuToCart: arrCart.value })
             });
 
             const res = await HIT_API.json()
-            console.log(res)
             if (res.success) {
                 location.href = res.redirect
             }

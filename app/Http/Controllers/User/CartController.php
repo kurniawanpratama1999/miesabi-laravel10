@@ -7,11 +7,11 @@ use App\Models\DeliveryMethod;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-class KeranjangController extends Controller
+class CartController extends Controller
 {
     public function index()
     {
-        $chosenProducts = session()->get('menuController.menuToKeranjang');
+        $chosenProducts = session()->get('menuController.menuToCart');
         if (!$chosenProducts) {
             return redirect()->route('menu.index');
         }
@@ -28,15 +28,15 @@ class KeranjangController extends Controller
         }
 
         $getDeliveryMethods = DeliveryMethod::all();
-        return view('pages.user.keranjang', compact('getProducts', 'getDeliveryMethods'));
+        return view('pages.user.cart', compact('getProducts', 'getDeliveryMethods'));
     }
 
     public function store(Request $req)
     {
         // UNTUK HANDLE CLICK CHECKOUT
-        $payloadKeranjangToCheckout = $req->input('payloadKeranjangToCheckout');
-        session()->put(['keranjangController.keranjangToCheckout' => $payloadKeranjangToCheckout]);
+        $payloadCartToCheckout = $req->input('payloadCartToCheckout');
+        session()->put(['cartController.cartToCheckout' => $payloadCartToCheckout]);
 
-        return response()->json(['success' => true, 'redirect' => '/checkout']);
+        return response()->json(['success' => true, 'redirect' => route('checkout.index')]);
     }
 }

@@ -66,7 +66,7 @@
 @pushOnce('scripts')
 <script>
     async function makeOrder() {
-        const api = await fetch('/checkout', {
+        const api = await fetch('/u/checkout', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

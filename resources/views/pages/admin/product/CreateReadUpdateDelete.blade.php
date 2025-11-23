@@ -6,7 +6,7 @@
     <main>
         <section>
             <h2>Daftar Produk</h2>
-            <form method="POST" action="{{ isset($product) ? route('product.update', $product->id) : route('product.store')  }}">
+            <form method="POST" action="{{ isset($product) ? route('products.update', $product->id) : route('products.store')  }}">
                 @csrf
                 @if(isset($product))
                     @method('PUT')
@@ -31,7 +31,7 @@
                 <div>
                     <button type="submit">{{ isset($product) ? "Simpan" : "Tambah" }}</button>
                     @if(isset($product))
-                        <a href="{{ route('product.index') }}">Kembali</a>
+                        <a href="{{ route('products.index') }}">Kembali</a>
                     @endif
                 </div>
             </form>
@@ -49,19 +49,19 @@
                 @foreach ($datas as $data)
                     <tr class="data-{{ $data->id }}">
                         <td>
-                            <a href="{{ route('product.edit', $data->id) }}">{{ $data->name }}</a>
+                            <a href="{{ route('products.edit', $data->id) }}">{{ $data->name }}</a>
                         </td>
                         <td>
-                            <a href="{{ route('product.edit', $data->id) }}">{{ $data->category_name }}</a>
+                            <span>{{ $data->category_name }}</span>
                         </td>
                         <td>
-                            <a href="{{ route('product.edit', $data->id) }}">{{ $data->price }}</a>
+                            <span>{{ $data->price }}</span>
                         </td>
                         <td>
-                            <a href="{{ route('product.edit', $data->id) }}">{{ $data->stock }}</a>
+                            <span>{{ $data->stock }}</span>
                         </td>
                         <td>
-                            <form method="POST" action="{{ route("product.destroy", $data->id) }}">
+                            <form method="POST" action="{{ route("products.destroy", $data->id) }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit">DELETE</button>

@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\DeliveryMethod;
 use App\Models\Order;
 use App\Models\OrderDetail;
-use Illuminate\Http\Request;
+use Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 
 class CheckoutController extends Controller
@@ -34,7 +33,7 @@ class CheckoutController extends Controller
     }
     public function index()
     {
-        $arrCheckouts = session()->get('keranjangController.keranjangToCheckout');
+        $arrCheckouts = session()->get('cartController.cartToCheckout');
         if (!$arrCheckouts) {
             return redirect()->route('menu.index');
         }
@@ -49,12 +48,13 @@ class CheckoutController extends Controller
     public function store()
     {
         // UNTUK HANDLE BUAT PESANAN
-        $arrCheckouts = session()->get('keranjangController.keranjangToCheckout');
+        $arrCheckouts = session()->get('cartController.cartToCheckout');
 
         $orders = $arrCheckouts['orders'];
         $orderDetails = $this->processOrderDetails($arrCheckouts['order_details']);
         
-        $orders['code'] = uniqid($orders['user_id']);
+        $orders['user_id'] = Auth::user()->id;
+        $orders['code'] = uniqid(Auth::user()->id);
         $orders['payment_status'] = 0;
         $orders['order_status'] = 0;
 
@@ -79,7 +79,7 @@ class CheckoutController extends Controller
             DB::commit();
             
             if ($orders['payment_with'] === 0) {
-                return response()->json(['success' => true, 'redirect' => '/orders/2']);
+                return response()->json(['success' => true, 'redirect' => route('orders.show', Auth::user()->id)]);
             }
             
             session()->put('checkoutController.checkoutToPayment', [
@@ -89,8 +89,8 @@ class CheckoutController extends Controller
             ]);
 
             session()->forget('menuController.menuToKeranjang');
-            session()->forget('keranjangController.keranjangToCheckout');
-            return response()->json(['success' => true, 'redirect' => '/scanqr']);
+            session()->forget('cartController.cartToCheckout');
+            return response()->json(['success' => true, 'redirect' => route('scanqr.index')]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $th->getMessage()]);

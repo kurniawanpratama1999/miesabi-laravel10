@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryMethod;
 use App\Models\Order;
+use Auth;
 use DB;
 use Illuminate\Http\Request;
 
@@ -14,23 +15,26 @@ class ScanQrController extends Controller
         $checkoutPayment = session()->pull("checkoutController.checkoutToPayment");
 
         if (!$checkoutPayment) {
-            return redirect('/orders/2');
+            return redirect()->route('orders.show', Auth::user()->id);
         }
 
         $order_id = $checkoutPayment['order_id'];
         $delivery = DeliveryMethod::where('id', '=', $checkoutPayment['delivery_id'])->first();
         $total = (int) $checkoutPayment['subtotal'] + (int) $delivery->price;
+        
         return view('pages.user.scanqr', compact('total', 'order_id'));
     }
 
     public function edit (string $id) {
         $order = DB::table('orders as o')
             ->select(
+                'o.user_id',
                 'o.id',
                 'd.price as delivery_price',
             )
             ->leftJoin('delivery_methods as d', 'd.id', '=', 'o.delivery_id')
             ->where('o.id', '=', $id)
+            ->where('o.user_id', '=', Auth::user()->id)
             ->first();
 
             $subtotal = DB::table('order_details as od')
@@ -40,6 +44,7 @@ class ScanQrController extends Controller
             $total = $subtotal + $order->delivery_price;
             $order->total_price = $total;
             $order_id = $order->id;
+            
         return view('pages.user.scanqr', compact('total', 'order_id'));
     }
 
@@ -52,7 +57,7 @@ class ScanQrController extends Controller
 
         return response()->json([
             'success' => true,
-            'redirect' => '/orders/2'
+            'redirect' => route('orders.show', Auth::user()->id)
         ]);
     }
 }

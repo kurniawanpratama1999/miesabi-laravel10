@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('title', 'Keranjang | Mie Sabi')
+@section('title', 'Cart | Mie Sabi')
 
 @section('section')
     <main style="height: calc(100dvh - 3.5rem);" class="row overflow-hidden container-fluid mx-auto bg-young-brown">
@@ -230,7 +230,7 @@
         let copygetProducts = [...getProducts];
         let order_details = flattenProducts(copygetProducts)
         let orders = {
-            user_id: 2,
+            user_id: {{ Auth::user()->id }},
             delivery_id: delivery_id.value,
             code: '',
             payment_with: payment_method.value,
@@ -246,14 +246,14 @@
             order_details
         }
 
-        const HIT_API = await fetch('/keranjang', {
+        const HIT_API = await fetch('/u/cart', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
             },
 
-            body: JSON.stringify({payloadKeranjangToCheckout: arrCheckout})
+            body: JSON.stringify({payloadCartToCheckout: arrCheckout})
         })
 
         const res = await HIT_API.json();

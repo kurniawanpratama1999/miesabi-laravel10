@@ -19,10 +19,10 @@ class RedirectIfLoggedIn
             $user = auth()->user();
             
             if ($user->role === 'admin') {
-                return redirect()->intended('/product');
+                return redirect()->route('products.index');
             }
 
-            return redirect()->intended('/menu');
+            return redirect()->route('menu.index');
         }
         return $next($request);
     }

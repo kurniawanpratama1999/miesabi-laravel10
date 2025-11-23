@@ -68,7 +68,7 @@ class ProductController extends Controller
             ]);
 
             Product::create($validate);
-            return redirect()->route('product.index');
+            return redirect()->route('products.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }
@@ -89,7 +89,7 @@ class ProductController extends Controller
             $findByID = Product::findOrFail($id);
             $findByID->update($validate);
 
-            return redirect()->route('product.index');
+            return redirect()->route('products.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }

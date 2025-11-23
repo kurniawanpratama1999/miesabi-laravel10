@@ -15,6 +15,13 @@
         <li class="nav-item">
           <a class="nav-link text-white" href="#">Riwayat</a>
         </li>
+        <li class="nav-item">
+          <form action="{{ route('logout') }}" method="post">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Logout</button>
+          </form>
+        </li>
       </ul>
     </div>
   </div>

@@ -23,13 +23,12 @@ class MenuController extends Controller
 
     public function store(Request $req)
     {
-        // UNTUK HADNLE CLICK KERANJANG
-        $payloadMenuToKeranjang = $req->input('payloadMenuToKeranjang');
-        session()->put('menuController.menuToKeranjang', $payloadMenuToKeranjang);
+        $payloadMenuToCart = $req->input('payloadMenuToCart');
+        session()->put('menuController.menuToCart', $payloadMenuToCart);
 
         return response()->json([
             "success" => true,
-            "redirect" => "/keranjang"
+            "redirect" => route('cart.index')
         ]);
     }
 }

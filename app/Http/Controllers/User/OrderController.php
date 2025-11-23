@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Auth;
 use DB;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,7 @@ class OrderController extends Controller
                 'o.created_at'
             )
             ->leftJoin('delivery_methods as d', 'd.id', '=', 'o.delivery_id')
-            ->where('o.user_id', '=', $id)
+            ->where('o.user_id', '=', Auth::user()->id)
             ->get();
 
         foreach ($orders as $order) {

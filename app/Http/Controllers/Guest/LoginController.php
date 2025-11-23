@@ -24,18 +24,14 @@ class LoginController extends Controller
             $user = Auth::user();
             
             if ($user->role === 'admin') {
-                return redirect()->intended('/product');
+                return redirect()->route('products.index');
             }
 
             if ($user->role === 'user') {
-                return redirect()->intended('/menu');
+                return redirect()->route('menu.index');
             }
-            
-            logger()->info('Login Berhasil');
-            return redirect()->intended("/{$user->username}/dashboard");
         }
-        
-        logger()->info('Login Gagal');
+
         return back()->withErrors(['username' => 'Username atau Password Salah'])->onlyInput('username');
     }
 

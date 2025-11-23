@@ -12,13 +12,16 @@
         <li class="nav-item">
           <a class="nav-link text-white" href="{{ route('menu.index') }}">Menu</a>
         </li>
-        <li id="keranjang" class="nav-item d-flex d-none">
-          <button onclick="goToKeranjang()" class="nav-link text-white">Keranjang</button>
-          <span style="height: 3ch; width: 3ch;" class="d-block bg-white rounded-circle d-flex align-items-center justify-content-center">0</span>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="{{ route('orders.show',2) }}">Pesanan</a>
-        </li>
+        @if(Auth::check())
+          <li id="cart" class="nav-item d-flex d-none">
+            <button onclick="goToKeranjang()" class="nav-link text-white">Keranjang</button>
+            <span style="height: 3ch; width: 3ch;" class="d-block bg-white rounded-circle d-flex align-items-center justify-content-center">0</span>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{{ route('orders.show', Auth::user()->id) }}">Pesanan</a>
+          </li>
+        @endif
         <li class="nav-item">
           <a class="nav-link text-white" href="{{ route('menu.index') }}">Ulasan</a>
         </li>
