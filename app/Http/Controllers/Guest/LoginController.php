@@ -24,7 +24,11 @@ class LoginController extends Controller
             $user = Auth::user();
             
             if ($user->role === 'admin') {
-                return redirect()->intended('/pesanan');
+                return redirect()->intended('/product');
+            }
+
+            if ($user->role === 'user') {
+                return redirect()->intended('/menu');
             }
             
             logger()->info('Login Berhasil');

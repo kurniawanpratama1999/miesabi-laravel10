@@ -51,12 +51,12 @@
                 @endforeach
             </div>
             <div class="d-flex justify-content-center gap-5 mt-3">
-                @foreach (['qris', 'tunai'] as $payment)
+                @foreach ([0, 1] as $payment)
                 <div onclick="handleClickPayment('{{ $payment }}')">
                     <div style="width: 80px; height: 40px;" class="border mb-2">
 
                     </div>
-                    <span class="d-block text-center">{{ $payment }}</span>
+                    <span class="d-block text-center">{{ $payment == 0 ? "Tunai" : "QRIS" }}</span>
                 </div>
                 @endforeach
             </div>
@@ -84,7 +84,7 @@
 @pushOnce('scripts')
 <script>
     const delivery_id = {value: 1};
-    const payment_method = {value: 'qris'}
+    const payment_method = {value: 0}
 
     let getProducts = {{ Js::from($getProducts) }}
 
@@ -126,7 +126,7 @@
 
     function handleVariantCounter (event, productID, variantID, operator) {
         const inputElement = document.getElementById(`variant-${productID}-${variantID}`)
-        const productIndex = getProducts.findIndex(p => product.id == productID)
+        const productIndex = getProducts.findIndex(p => p.id == productID)
         if (productIndex === -1) return
 
         const variants = getProducts[productIndex].variants
@@ -155,7 +155,7 @@
     }
 
     function handleClickDelivery (id) {
-        delivery_id.value = id
+        delivery_id.value = parseInt(id)
     }
 
     function handleClickPayment(method) {
@@ -186,7 +186,6 @@
                     variantsWithQuantity.push({
                         product_id: prod.id,
                         variant_id: v.id,
-                        merge: `${prod.id}-${v.id}`,
                         quantity: v.quantity
                     });
                     totalVariantQuantity += v.quantity;
@@ -203,7 +202,6 @@
                 result.push({
                     product_id: prod.id,
                     variant_id: firstVariant.id,
-                    merge: `${prod.id}-${firstVariant.id}`,
                     quantity: remainingQuantity
                 });
             }

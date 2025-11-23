@@ -34,7 +34,7 @@ class CheckoutController extends Controller
     }
     public function index()
     {
-        $arrCheckouts = session('keranjangController.keranjangToCheckout');
+        $arrCheckouts = session()->get('keranjangController.keranjangToCheckout');
         if (!$arrCheckouts) {
             return redirect()->route('menu.index');
         }
@@ -46,17 +46,17 @@ class CheckoutController extends Controller
         return view('pages.user.checkout', compact('orders', 'orderDetails', 'delivery'));
     }
 
-    public function store(Request $req)
+    public function store()
     {
         // UNTUK HANDLE BUAT PESANAN
-        $arrCheckouts = session('keranjangController.keranjangToCheckout');
+        $arrCheckouts = session()->get('keranjangController.keranjangToCheckout');
 
         $orders = $arrCheckouts['orders'];
         $orderDetails = $this->processOrderDetails($arrCheckouts['order_details']);
         
         $orders['code'] = uniqid($orders['user_id']);
-        $orders['payment_status'] = 'belum lunas';
-        $orders['order_status'] = 'menunggu';
+        $orders['payment_status'] = 0;
+        $orders['order_status'] = 0;
 
         DB::beginTransaction();
         try {
@@ -69,7 +69,7 @@ class CheckoutController extends Controller
                     "order_id" => $order_id,
                     "product_id" => $orderDetail->product_id,
                     "variant_id" => $orderDetail->variant_id,
-                    "merge" => $orderDetail->product_id . "-" . $orderDetail->variant_id ?? 0,
+                    "merge" => $order_id . "-" . $orderDetail->product_id . "-" . $orderDetail->variant_id ?? 0,
                     "quantity" => $orderDetail->quantity,
                 ];
 
@@ -78,9 +78,18 @@ class CheckoutController extends Controller
 
             DB::commit();
             
-            Session::forget('menuController.menuToKeranjang');
-            Session::forget('keranjangController.keranjangToCheckout');
+            if ($orders['payment_with'] === 0) {
+                return response()->json(['success' => true, 'redirect' => '/orders/2']);
+            }
+            
+            session()->put('checkoutController.checkoutToPayment', [
+                "order_id" => $order_id,
+                "delivery_id" => $orders['delivery_id'],
+                "subtotal" => collect($orderDetails)->sum('total')
+            ]);
 
+            session()->forget('menuController.menuToKeranjang');
+            session()->forget('keranjangController.keranjangToCheckout');
             return response()->json(['success' => true, 'redirect' => '/scanqr']);
         } catch (\Throwable $th) {
             DB::rollBack();

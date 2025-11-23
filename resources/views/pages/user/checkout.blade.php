@@ -50,7 +50,7 @@
                 </div>
                 <div class="row">
                     <span class="col-6">Metode Pembayaran</span>
-                    <span class="col-6 d-block text-end">{{ $orders['payment_with'] }}</span>
+                    <span class="col-6 d-block text-end">{{ $orders['payment_with'] == 0 ? "Tunai" : "QRIS" }}</span>
                 </div>
                 <div class="row">
                     <span class="col-6">Total Pembayaran</span>
@@ -74,7 +74,6 @@
             }
         })
         const res = await api.json();
-        console.log(res)
 
         if (res.success) {
             location.href = res.redirect

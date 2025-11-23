@@ -35,7 +35,7 @@ class KeranjangController extends Controller
     {
         // UNTUK HANDLE CLICK CHECKOUT
         $payloadKeranjangToCheckout = $req->input('payloadKeranjangToCheckout');
-        session(['keranjangController.keranjangToCheckout' => $payloadKeranjangToCheckout]);
+        session()->put(['keranjangController.keranjangToCheckout' => $payloadKeranjangToCheckout]);
 
         return response()->json(['success' => true, 'redirect' => '/checkout']);
     }

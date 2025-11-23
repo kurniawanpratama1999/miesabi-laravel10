@@ -7,20 +7,20 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
       <ul class="navbar-nav gap-5">
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Dashboard</a>
+          <a class="nav-link text-white" href="{{ route('menu.index') }}">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Menu</a>
+          <a class="nav-link text-white" href="{{ route('menu.index') }}">Menu</a>
         </li>
         <li id="keranjang" class="nav-item d-flex d-none">
           <button onclick="goToKeranjang()" class="nav-link text-white">Keranjang</button>
           <span style="height: 3ch; width: 3ch;" class="d-block bg-white rounded-circle d-flex align-items-center justify-content-center">0</span>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Pesanan</a>
+          <a class="nav-link text-white" href="{{ route('orders.show',2) }}">Pesanan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Ulasan</a>
+          <a class="nav-link text-white" href="{{ route('menu.index') }}">Ulasan</a>
         </li>
       </ul>
     </div>
