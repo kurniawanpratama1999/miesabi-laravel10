@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function show (int $id) {
+    public function index () {
         $orders = DB::table('orders as o')
             ->select(
                 'o.user_id',
@@ -39,6 +39,15 @@ class OrderController extends Controller
         }
 
 
-        return view('pages.user.riwayat-pesanan', compact('orders'));
+        return view('pages.user.orders', compact('orders'));
+    }
+
+    public function update (int $id) {
+        $order = Order::findOrFail($id);
+        $order->update([
+            'order_status' => 7
+        ]);
+
+        return redirect()->route('orders.index');
     }
 }

@@ -19,11 +19,11 @@ class OrderDetail extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function products () {
-        return $this->belongsToMany(Product::class);
+    public function product () {
+        return $this->belongsTo(Product::class);
     }
 
-    public function variants () {
-        return $this->belongsToMany(Variant::class);
+    public function variant () {
+        return $this->belongsTo(Variant::class);
     }
 }

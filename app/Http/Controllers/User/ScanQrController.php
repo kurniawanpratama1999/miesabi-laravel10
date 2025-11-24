@@ -25,7 +25,7 @@ class ScanQrController extends Controller
         return view('pages.user.scanqr', compact('total', 'order_id'));
     }
 
-    public function edit (string $id) {
+    public function show (string $id) {
         $order = DB::table('orders as o')
             ->select(
                 'o.user_id',
@@ -52,7 +52,7 @@ class ScanQrController extends Controller
         $order = Order::findOrFail($id);
 
         $order->update([
-            'payment_status' => 1
+            'payment_status' => 2
         ]);
 
         return response()->json([

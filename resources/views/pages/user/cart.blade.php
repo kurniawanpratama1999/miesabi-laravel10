@@ -51,12 +51,17 @@
                 @endforeach
             </div>
             <div class="d-flex justify-content-center gap-5 mt-3">
-                @foreach ([0, 1] as $payment)
+                @foreach ([1, 2] as $payment)
                 <div onclick="handleClickPayment('{{ $payment }}')">
                     <div style="width: 80px; height: 40px;" class="border mb-2">
 
                     </div>
-                    <span class="d-block text-center">{{ $payment == 0 ? "Tunai" : "QRIS" }}</span>
+                    <span class="d-block text-center">
+                        @switch($payment)
+                            @case(1) Tunai @break
+                            @case(2) QRIS @break
+                        @endswitch
+                    </span>
                 </div>
                 @endforeach
             </div>
@@ -84,7 +89,7 @@
 @pushOnce('scripts')
 <script>
     const delivery_id = {value: 1};
-    const payment_method = {value: 0}
+    const payment_method = {value: 1}
 
     let getProducts = {{ Js::from($getProducts) }}
 
@@ -230,12 +235,8 @@
         let copygetProducts = [...getProducts];
         let order_details = flattenProducts(copygetProducts)
         let orders = {
-            user_id: {{ Auth::user()->id }},
             delivery_id: delivery_id.value,
-            code: '',
             payment_with: payment_method.value,
-            payment_status: '',
-            order_status: '',
             note: "ABC",
             address: "ABC",
             phone: "ABC"

@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Guest\{LoginController, RegisterController};
-use App\Http\Controllers\{CategoryController, DeliveryController, VariantController, ProductController};
-use App\Http\Controllers\User\{MenuController, KeranjangController, CheckoutController, OrderController as UserOrderController, ScanQrController};
+use App\Http\Controllers\Admin\{CategoryController, DeliveryController, VariantController, ProductController, OrderController as AdminOrderController};
+use App\Http\Controllers\User\{MenuController, CartController, CheckoutController,ScanQrController, OrderController as UserOrderController, OrderDetailController as UserOrderDetailController};
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['redirectifloggedin'])->group(function () {
@@ -25,7 +25,21 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('deliveries', DeliveryController::class);
             Route::resource('variants', VariantController::class);
             Route::resource('products', ProductController::class);
-            Route::resource('orders', ProductController::class);
+
+            Route::put('/u/orders/payment/{order_id}', [AdminOrderController::class, 'updatePaymentStatus'])
+            ->whereNumber('order_id')
+            ->name('u.orders.payment');
+
+            Route::put('/u/orders/status/{order_id}/next', [AdminOrderController::class, 'updateOrderStatus'])
+            ->whereNumber('order_id')
+            ->name('u.orders.status.next');
+
+            Route::put('/u/orders/status/{order_id}/prev', [AdminOrderController::class, 'rollbackOrderStatus'])
+            ->whereNumber('order_id')
+            ->name('u.orders.status.prev');
+
+            Route::resource('orders', AdminOrderController::class);
+            
             Route::resource('details', ProductController::class);
         });
     });
@@ -33,11 +47,11 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['checkrole:user'])->group(function () {
         Route::prefix('u')->group(function(){
             Route::resource('menu', MenuController::class);
-            Route::resource('cart', KeranjangController::class);
+            Route::resource('cart', CartController::class);
             Route::resource('checkout', CheckoutController::class);
             Route::resource('scanqr', ScanQrController::class);
             Route::resource('orders', UserOrderController::class);
-            Route::resource('details', UserOrderController::class);
+            Route::resource('details', UserOrderDetailController::class);
         });
     });
 });

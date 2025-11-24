@@ -20,9 +20,9 @@ return new class extends Migration
             ->restrictOnDelete();
             $col->foreignId('delivery_id')->constrained('delivery_methods')->restrictOnDelete();
             $col->string('code')->unique();
-            $col->tinyInteger('payment_with'); // 0 untuk tunai || 1 untuk qris || 2 untuk transfer    
-            $col->tinyInteger('payment_status')->default(0); // 0 belum lunas || 1 untuk lunas
-            $col->tinyInteger('order_status')->default(0); // 0 menunggu || 1 diproses || 2 Kirim || 3 Selesai
+            $col->enum('payment_with', [1,2,3]); // 1 untuk tunai || 2 untuk qris || 3 untuk transfer    
+            $col->enum('payment_status', [1,2])->default(1); // 1 belum lunas || 2 untuk lunas
+            $col->enum('order_status', [1,2,3,4,5,6,7])->default(1);
             $col->string('note')->default('-');
             $col->string('address');
             $col->string('phone');

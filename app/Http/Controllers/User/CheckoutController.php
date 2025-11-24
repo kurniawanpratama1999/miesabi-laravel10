@@ -55,8 +55,8 @@ class CheckoutController extends Controller
         
         $orders['user_id'] = Auth::user()->id;
         $orders['code'] = uniqid(Auth::user()->id);
-        $orders['payment_status'] = 0;
-        $orders['order_status'] = 0;
+        $orders['payment_status'] = 1;
+        $orders['order_status'] = 1;
 
         DB::beginTransaction();
         try {

@@ -50,7 +50,12 @@
                 </div>
                 <div class="row">
                     <span class="col-6">Metode Pembayaran</span>
-                    <span class="col-6 d-block text-end">{{ $orders['payment_with'] == 0 ? "Tunai" : "QRIS" }}</span>
+                    <span class="col-6 d-block text-end">
+                        @switch ($orders['payment_with'])
+                            @case (1) Tunai @break
+                            @case (2) QRIS @break
+                        @endswitch
+                    </span>
                 </div>
                 <div class="row">
                     <span class="col-6">Total Pembayaran</span>

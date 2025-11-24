@@ -35,6 +35,7 @@ class CartController extends Controller
     {
         // UNTUK HANDLE CLICK CHECKOUT
         $payloadCartToCheckout = $req->input('payloadCartToCheckout');
+        
         session()->put(['cartController.cartToCheckout' => $payloadCartToCheckout]);
 
         return response()->json(['success' => true, 'redirect' => route('checkout.index')]);
