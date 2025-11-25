@@ -3,36 +3,34 @@
 @section('title', 'Menu | Mie Sabi')
 
 @section('section')
-<main class="bg-young-brown">
-    <section class="p-4 row gap-4 justify-content-evenly container-fluid">
-        <span class="fw-bold fs-3 text-old-brown">Daftar Menu</span>
-        <div class="row gap-3 justify-content-evenly">
+    <section class="container-fluid p-5">
+        <div class="row">
             @foreach ($dbTableProducts as $product)
-                <div id="product-{{ $product->id }}" class="col-2 bg-white p-2">
-                    <div id="p-image" style="aspect-ratio: 1/1;" class="border"></div>
-                    <div class="p-3">
-                        <div class="d-flex flex-column">
-                            <span id="p-name" class="text-center fw-bold">{{ $product->name }}</span>
-                            <span id="p-category" class="text-center fw-bold d-none">{{ $product->category_name }}</span>
-                            <span id="p-price" class="text-center">{{ $product->price }}</span>
-                        </div>
-
-                        @if(Auth::check())
-                            <div class="d-flex gap-2 justify-content-center mt-3">
-                                <button onclick="handleProductCounter('-', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">-</button>
-                                <input id="p-quantity-{{ $product->id }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0" autocomplete="off">
-                                <button onclick="handleProductCounter('+', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0">+</button>
+                <div id="product-{{ $product->id }}" class="col-6 col-sm-4 col-lg-3 col-xl-2 p-2">
+                    <div class="bg-yellow-200">
+                        <div id="p-image" style="aspect-ratio: 1/1;" class="border-bottom"></div>
+                        <div class="p-3">
+                            <div class="d-flex flex-column">
+                                <span id="p-name" class="text-center fw-bold">{{ $product->name }}</span>
+                                <span id="p-category" class="text-center fw-bold d-none">{{ $product->category_name }}</span>
+                                <span id="p-price" class="text-center">{{ $product->price }}</span>
                             </div>
-                        @else
-                            <a href="{{ route('login') }}" class="link-success text-center d-block mt-3">Beli</a>
-                        @endif
+    
+                            @if(Auth::check())
+                                <div class="d-flex gap-2 justify-content-center mt-3">
+                                    <button onclick="handleProductCounter('-', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0 bg-red-400">-</button>
+                                    <input id="p-quantity-{{ $product->id }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0" autocomplete="off">
+                                    <button onclick="handleProductCounter('+', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0 bg-green-400">+</button>
+                                </div>
+                            @else
+                                <a href="{{ route('login') }}" class="link-success text-center d-block mt-3">Beli</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @endforeach
         </div>
-
     </section>
-</main>
 @endsection
 
 @pushOnce('scripts')
@@ -51,7 +49,6 @@
             }
 
             getCartElement.querySelector('span').innerHTML = arrCart.value.reduce((a, b) => a + b.quantity, 0)
-
         }
 
         function handleProductCounter(operator, id){

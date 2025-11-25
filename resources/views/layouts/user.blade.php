@@ -20,7 +20,9 @@
     </head>
     <body>
         <x-navbar-user/>
-        @yield('section')
+        <main style="min-height: 100dvh; padding-top: 3.5rem" class="bg-yellow-100">
+            @yield('section')
+        </main>
 
         @stack('scripts')
     </body>
