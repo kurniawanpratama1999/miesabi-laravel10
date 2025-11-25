@@ -1,8 +1,8 @@
-@extends('layouts.user')
+@extends('layouts.admin')
 
-@section('title', 'Details | Mie Sabi')
+@section('title', 'Detail pesanan | Miesabi')
 
-@section('section')
+@section('content')
 <div class="container py-4">
     <h4 class="mb-4">Detail Produk </h4>
 
@@ -34,11 +34,25 @@
                     <td class="text-nowrap">{{ $orderDetail->variant->name ?? "-" }}</td>
                     <td class="text-nowrap">Rp {{ number_format($orderDetail->product->price + ($orderDetail->variant->price ?? 0), 0, ',', '.') }}</td>
                     <td class="text-nowrap">{{ $orderDetail->quantity }}</td>
-                    <td class="text-nowrap">Rp {{ number_format($orderDetail->quantity * $orderDetail->product->price, 0, ',', '.') }}</td>
+                    <td class="text-nowrap">Rp {{ number_format($orderDetail->quantity * ($orderDetail->product->price + ($orderDetail->variant->price ?? 0)), 0, ',', '.') }}</td>
                 </tr>
             @endforeach
             </tbody>
-            
+            <tfoot>
+                <tr>
+                    <td colspan="5"></td>
+                    <td>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5"></td>
+                    <td>Rp {{ number_format($order->delivery_price, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5"></td>
+                    <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                </tr>
+                
+            </tfoot>
         </table>
     </div>
 </div>

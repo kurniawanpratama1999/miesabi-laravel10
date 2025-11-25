@@ -45,7 +45,7 @@ class CategoryController extends Controller
             ]);
 
             Category::create($validate);
-            return redirect()->route('category.index'); 
+            return redirect()->route('categories.index'); 
         } catch (\Throwable $th) {
             return back()->withInput(); 
         }
@@ -61,7 +61,7 @@ class CategoryController extends Controller
             $findByID = Category::findOrFail($id);
             $findByID->update($validate);
 
-            return redirect()->route('category.index'); 
+            return redirect()->route('categories.index'); 
         } catch (\Throwable $th) {
             return back()->withInput(); 
         }

@@ -3,7 +3,6 @@
 @section('title', 'Produk | Miesabi')
 
 @section('content')
-
         <div class="container">
             <section class="pt-3">
                 <form enctype="multipart/form-data" class="row bg-yellow-400 rounded p-3 mb-4 w-50 mx-auto" method="POST" action="{{ isset($product) ? route('products.update', $product->id) : route('products.store')  }}">
@@ -56,7 +55,13 @@
             </section>
 
             <section class="">
-                <h3>Daftar Produk</h3>
+                <div class="d-block d-md-flex align-items-center gap-5">
+                    <h3>Produk Setting</h3>
+                    <a href="{{ route('products.index') }}" class="ms-auto nav-link">Products</a>
+                    <a href="{{ route('categories.index') }}" class="nav-link">Categories</a>
+                    <a href="{{ route('variants.index') }}" class="nav-link">Variants</a>
+                    <a href="{{ route('deliveries.index') }}" class="nav-link">Deliveries</a>
+                </div>
                 <div class="table-responsive">
                     <table id="datas" class="table table-striped">
                         <thead>
@@ -72,18 +77,20 @@
                         <tbody>
                             @foreach ($datas as $data)
                                 <tr class="data-{{ $data->id }}">
-                                    <td>{{ $data->name }}</td>
-                                    <td>
-                                        @if ($data->photo)
-                                        <div style="width: 200px; aspect-ratio: 1/1;" class="img-thumbnail overflow-hidden">
-                                            <img src="{{ asset('storage/' . $data->photo) }}" style="object-position: center" class="object-fit-cover" width="100%" height="100%">
+                                    <td class="align-middle">{{ $data->name }}</td>
+                                    <td class="align-middle">
+                                        <div style="width: 70px; aspect-ratio: 1/1;" class="img-thumbnail overflow-hidden rounded-circle position-relative">
+                                            @if ($data->photo)
+                                                <img src="{{ asset('storage/' . $data->photo) }}" style="object-position: center" class="object-fit-cover" width="100%" height="100%">
+                                            @else
+                                                <i class="bi bi-fork-knife fs-2 position-absolute top-50 start-50 translate-middle"></i>
+                                            @endif
                                         </div>
-                                        @endif
                                     </td>
-                                    <td><span>{{ $data->category_name }}</span></td>
-                                    <td><span>Rp {{ number_format($data->price, 0, ',', '.') }}</span></td>
-                                    <td><span >{{ number_format($data->stock, 0, ',', '.') }}</span></td>
-                                    <td>
+                                    <td class="align-middle"><span>{{ $data->category_name }}</span></td>
+                                    <td class="align-middle"><span>Rp {{ number_format($data->price, 0, ',', '.') }}</span></td>
+                                    <td class="align-middle"><span >{{ number_format($data->stock, 0, ',', '.') }}</span></td>
+                                    <td class="align-middle">
                                         <a href="{{ route('products.edit', $data->id) }}" class="btn btn-outline-primary">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>

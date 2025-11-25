@@ -12,31 +12,42 @@ class OrderController extends Controller
 {
     public function index () {
         $orders = DB::table('orders as o')
+            ->leftJoin('delivery_methods as d', 'd.id', '=', 'o.delivery_id')
+            ->leftJoin('users as u', 'u.id', '=', 'o.user_id')
+            ->leftJoin('order_details as od', 'od.order_id', '=', 'o.id')
+            ->leftJoin('products as p', 'p.id', '=', 'od.product_id')
+            ->leftJoin('variants as v', 'v.id', '=', 'od.variant_id')
             ->select(
-                'o.user_id',
-                'd.id as delivery_id',
-                'd.name as delivery_name',
-                'd.price as delivery_price',
                 'o.id',
                 'o.code',
+                'o.user_id',
+                'u.name as user_name',
                 'o.payment_with',
                 'o.payment_status',
                 'o.order_status',
                 'o.address',
-                'o.created_at'
+                'o.created_at',
+                'd.id as delivery_id',
+                'd.name as delivery_name',
+                'd.price as delivery_price',
+                DB::raw('SUM((COALESCE(v.price, 0) + p.price) * od.quantity) as subtotal'),
+                DB::raw('SUM((COALESCE(v.price, 0) + p.price) * od.quantity) + d.price as total_price')
             )
-            ->leftJoin('delivery_methods as d', 'd.id', '=', 'o.delivery_id')
-            ->where('o.user_id', '=', Auth::user()->id)
+            ->groupBy(
+                'o.id',
+                'o.code',
+                'o.user_id',
+                'u.name',
+                'o.payment_with',
+                'o.payment_status',
+                'o.order_status',
+                'o.address',
+                'o.created_at',
+                'd.id',
+                'd.name',
+                'd.price'
+            )
             ->get();
-
-        foreach ($orders as $order) {
-            $subtotal = DB::table('order_details as od')
-                ->join('products as p', 'p.id', '=', 'od.product_id')
-                ->where('od.order_id', $order->id)
-                ->sum(DB::raw('p.price * od.quantity'));
-            $total = $subtotal + $order->delivery_price;
-            $order->total_price = $total;
-        }
 
 
         return view('pages.user.orders', compact('orders'));

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Guest\{LoginController, RegisterController};
-use App\Http\Controllers\Admin\{CategoryController, DeliveryController, VariantController, ProductController, OrderController as AdminOrderController};
+use App\Http\Controllers\Admin\{CategoryController, DeliveryController, VariantController, ProductController, OrderController as AdminOrderController,OrderDetailController as AdminOrderDetailController, UserController};
 use App\Http\Controllers\User\{MenuController, CartController, CheckoutController,ScanQrController, OrderController as UserOrderController, OrderDetailController as UserOrderDetailController};
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +21,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['checkrole:admin'])->group(function () {
         Route::prefix('a')->group(function () {
+            Route::resource('users', UserController::class);
             Route::resource('categories', CategoryController::class);
             Route::resource('deliveries', DeliveryController::class);
             Route::resource('variants', VariantController::class);
@@ -28,19 +29,19 @@ Route::middleware(['auth'])->group(function () {
 
             Route::put('/u/orders/payment/{order_id}', [AdminOrderController::class, 'updatePaymentStatus'])
             ->whereNumber('order_id')
-            ->name('u.orders.payment');
+            ->name('a.orders.payment');
 
             Route::put('/u/orders/status/{order_id}/next', [AdminOrderController::class, 'updateOrderStatus'])
             ->whereNumber('order_id')
-            ->name('u.orders.status.next');
+            ->name('a.orders.status.next');
 
             Route::put('/u/orders/status/{order_id}/prev', [AdminOrderController::class, 'rollbackOrderStatus'])
             ->whereNumber('order_id')
-            ->name('u.orders.status.prev');
+            ->name('a.orders.status.prev');
 
             Route::resource('orders', AdminOrderController::class);
             
-            Route::resource('details', ProductController::class);
+            Route::resource('details', AdminOrderDetailController::class);
         });
     });
     

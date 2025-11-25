@@ -46,7 +46,7 @@ class DeliveryController extends Controller
             ]);
 
             DeliveryMethod::create($validate);
-            return redirect()->route('delivery.index'); 
+            return redirect()->route('deliveries.index'); 
         } catch (\Throwable $th) {
             return back()->withInput(); 
         }
@@ -63,7 +63,7 @@ class DeliveryController extends Controller
             $findByID = DeliveryMethod::findOrFail($id);
             $findByID->update($validate);
 
-            return redirect()->route('delivery.index'); 
+            return redirect()->route('deliveries.index'); 
         } catch (\Throwable $th) {
             return back()->withInput(); 
         }

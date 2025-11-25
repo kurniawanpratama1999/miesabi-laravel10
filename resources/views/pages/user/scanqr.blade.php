@@ -9,31 +9,26 @@
 
             </div>
 
+            
             <div class="mt-4 d-flex flex-column align-items-center">
                 <span class="fw-bold fs-4">Total Pembayaran</span>
                 <span class="fw-bold fs-4">Rp {{ number_format($total, 0, ',', '.') }}</span>
             </div>
-
-            <button type="button" onclick="sudahBayar({{ $order_id }})" class="bg-yellow-500 px-4 py-2 rounded border-0 mx-auto d-block mt-5">Sudah Bayar</button>
+            
+            <form enctype="multipart/form-data" action="{{ route('scanqr.update', $order_id) }}" method="post" class="py-2 px-4 mt-3">
+                @csrf
+                @method("PUT")
+                <div class="col-12">
+                    <label for="orders_receipt" class="text-center d-block">Upload Bukti Pembayaran</label>
+                    <input type="file" id="orders_receipt" name="orders_receipt" class="form-control">
+                </div>
+                <button type="submit" class="bg-yellow-500 px-4 py-2 rounded border-0 mx-auto d-block mt-5">Sudah Bayar</button>
+            </form>
         </section>
 @endsection
 
 @pushOnce('scripts')
     <script>
-        async function sudahBayar(order_id) {
-            const HIT_API = await fetch(`/u/scanqr/${order_id}`,{
-                method: 'PUT',
-                headers: {
-                    "Content-Type":"application/json",
-                    "X-CSRF-TOKEN":document.querySelector('meta[name=csrf-token]').getAttribute('content')
-                }
-            })
-
-            const res = await HIT_API.json();
-
-            if (res.success) {
-                location.href = res.redirect
-            }
-        }
+        
     </script>
 @endPushOnce

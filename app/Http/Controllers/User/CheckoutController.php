@@ -14,24 +14,50 @@ class CheckoutController extends Controller
 {
     private static function processOrderDetails($paramOrderDetails)
     {
+        $productIds = array_column($paramOrderDetails, 'product_id');
+        $variantIds = array_column($paramOrderDetails, 'variant_id');
+
+        $products = DB::table('products as p')
+            ->select(
+                'p.id as product_id',
+                'p.name',
+                'p.price',
+                'v.id as variant_id',
+                'v.name as variant_name',
+                'v.price as variant_price'
+            )
+            ->leftJoin('variants as v', 'v.product_id', '=', 'p.id')
+            ->whereIn('p.id', $productIds)
+            ->where(function ($q) use ($variantIds) {
+                $q->whereIn('v.id', $variantIds)
+                ->orWhereNull('v.id'); // <-- Produk tanpa variant
+            })
+            ->get()
+            ->keyBy(function ($item) {
+                return $item->product_id . '-' . ($item->variant_id ?? '0');
+            });
+
         $orderDetails = [];
-        foreach ($paramOrderDetails as $orderDetail) {
-            $product = DB::table('products as p')
-                ->select('p.id as product_id', 'p.name', 'v.id as variant_id', 'v.name as variant_name', 'p.price')
-                ->leftJoin('variants as v', 'v.product_id', '=', 'p.id')
-                ->where('p.id', '=', $orderDetail['product_id'])
-                ->where('v.id', '=', $orderDetail['variant_id'])
-                ->first();
 
-            $product->quantity = $orderDetail['quantity'];
-            $product->total = $product->price * $product->quantity;
+        foreach ($paramOrderDetails as $d) {
+            $vID = $d['variant_id'] ?? 0;
+            $key = $d['product_id'] . '-' . $vID;
+
+            $product = $products[$key];
+
+            // Harga variant null = 0
+            $product->variant_price = $product->variant_price ?? 0;
+            $product->variant_name = $product->variant_name ?? '-';
+
+            $product->quantity = $d['quantity'];
+            $product->total = ($product->price + $product->variant_price) * $d['quantity'];
+
             $orderDetails[] = $product;
-
-            logger()->info($product->quantity);
         }
 
         return $orderDetails;
     }
+
     public function index()
     {
         $arrCheckouts = session()->get('cartController.cartToCheckout');

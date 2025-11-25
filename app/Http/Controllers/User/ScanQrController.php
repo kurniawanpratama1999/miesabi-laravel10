@@ -38,9 +38,10 @@ class ScanQrController extends Controller
             ->first();
 
             $subtotal = DB::table('order_details as od')
-                ->join('products as p', 'p.id', '=', 'od.product_id')
+                ->leftJoin('products as p', 'p.id', '=', 'od.product_id')
+                ->leftJoin('variants as v', 'v.id', '=', 'od.variant_id')
                 ->where('od.order_id', $order->id)
-                ->sum(DB::raw('p.price * od.quantity'));
+                ->sum(DB::raw('(p.price + COALESCE(v.price, 0)) * od.quantity'));
             $total = $subtotal + $order->delivery_price;
             $order->total_price = $total;
             $order_id = $order->id;
@@ -48,16 +49,28 @@ class ScanQrController extends Controller
         return view('pages.user.scanqr', compact('total', 'order_id'));
     }
 
-    public function update (string $id) {
-        $order = Order::findOrFail($id);
-
-        $order->update([
-            'payment_status' => 2
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'redirect' => route('orders.show', Auth::user()->id)
-        ]);
+    public function update (Request $req, int $id) {
+        try {
+            $order = Order::findOrFail($id);
+    
+            $req->validate([
+                'orders_receipt' => ['required', 'file', 'mimes:png,jpg', 'max:2048']
+            ]);
+    
+            if ($order->orders_receipt && file_exists(storage_path('app/public/' . $order->orders_receipt))) {
+                unlink(storage_path('app/public/' . $order->orders_receipt));
+            }
+    
+            $receiptPath = $req->file('orders_receipt')->store('orders_receipt', 'public');
+    
+            $order->update([
+                'orders_receipt'  => $receiptPath,
+                'payment_status' => 2
+            ]);
+            
+            return redirect()->route('orders.index');
+        } catch (\Throwable $th) {
+            return redirect()->route('orders.index');
+        }
     }
 }

@@ -84,7 +84,6 @@
             }
         })
         const res = await api.json();
-
         if (res.success) {
             location.href = res.redirect
         }

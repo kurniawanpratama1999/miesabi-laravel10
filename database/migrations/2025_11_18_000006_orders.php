@@ -27,7 +27,7 @@ return new class extends Migration
             $col->string('address');
             $col->string('phone');
             $col->string('orders_receipt')->default(null)->nullable();
-            $col->string('comment')->default(null);
+            $col->string('comment')->default(null)->nullable();
             $col->enum('stars', [0, 1, 2, 3, 4, 5])->default(0);
 
             // $col->commentar

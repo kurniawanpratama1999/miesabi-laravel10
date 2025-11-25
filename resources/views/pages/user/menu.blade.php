@@ -8,9 +8,11 @@
             @foreach ($dbTableProducts as $product)
                 <div id="product-{{ $product->id }}" class="col-6 col-sm-4 col-lg-3 col-xl-2 p-2">
                     <div class="bg-yellow-200">
-                        <div id="p-image" style="aspect-ratio: 1/1;" class="p-2">
+                        <div id="p-image" style="aspect-ratio: 1/1;" class="p-2 position-relative">
                             @if ($product->photo)
                                 <img src="{{ asset('storage/' . $product->photo) }}" style="object-position: center" class="object-fit-cover rounded" width="100%" height="100%">
+                            @else
+                                <i class="bi bi-fork-knife fs-2 top-50 start-50 translate-middle position-absolute"></i>
                             @endif
                         </div>
                         <div class="p-3">

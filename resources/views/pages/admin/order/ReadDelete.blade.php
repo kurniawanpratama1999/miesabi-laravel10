@@ -3,25 +3,19 @@
 @section('title', 'Pesanan | Miesabi')
 
 @section('content')
-    <main class="container-fluid py-4 bg-light">
+    <div class="container py-4">
     <h4 class="mb-4">Status Pesanan</h4>
-
-    <!-- Filter Order -->
-    <section class="d-flex gap-4 mb-3 justify-content-end">
-        <a href="?filter=processing" class="text-dark">Sedang Diproses</a>
-        <a href="?filter=done" class="text-dark">Pesanan Selesai</a>
-        <a href="?filter=history" class="text-dark">Riwayat</a>
-    </section>
 
     <!-- Table Order -->
     <div class="table-responsive">
         <table class="table table-striped align-middle">
-            <thead class="table-dark">
+            <thead>
                 <tr>
                     <th>Kode</th>
                     <th>Nama User</th>
                     <th>Pengiriman</th>
                     <th>Pembayaran</th>
+                    <th>Photo</th>
                     <th>Status Bayar</th>
                     <th>Total</th>
                     <th>Alamat</th>
@@ -92,35 +86,56 @@
                     <td>{{ $order->delivery_name }}</td>
                     <td>{{ $payment_with }}</td>
                     <td>
+                        @if($order->orders_receipt)
+                            <div data-bs-toggle="modal" data-bs-target="#modalReceipt-{{ $order->id }}" style="width: 70px; aspect-ratio: 1/1;cursor:pointer;" class="rounded-circle overflow-hidden mx-auto">
+                                <img src="{{ asset('storage/' . $order->orders_receipt) }}" class="w-100">
+                            </div>
+                            <div class="modal fade" id="modalReceipt-{{ $order->id }}" tabindex="-1" aria-labelledby="modalReceipt-{{ $order->id }}Label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-body">
+                                        <img src="{{ asset('storage/' . $order->orders_receipt) }}" class="w-100">
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </td>
+                    <td>
                         <div class="d-flex flex-column gap-2 text-center">
                             <span>{{ $payment_status }}</span>
 
                             @if ($order->payment_status == 1)
-                            <form action="{{ route('u.orders.payment', $order->id) }}" method="post">
+                            <form action="{{ route('a.orders.payment', $order->id) }}" method="post">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" class="btn btn-sm btn-primary">{{ $order_status }}</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Konfirmasi Pembayaran</button>
                             </form>
                             @endif
                         </div>
                     </td>
-                    <td>25.000</td>
-                    <td>-</td>
+                    <td class="text-nowrap">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                    <td>{{ $order->address }}</td>
 
                     <td>
-                        <form action="{{ route('u.orders.status.next', $order->id) }}" method="post">
+                        <form action="{{ route('a.orders.status.next', $order->id) }}" method="post">
                             @csrf
                             @method('PUT')
                             <button type="submit" class="btn btn-sm btn-primary">{{ $order_status }}</button>
                         </form>
                     </td>
-                    <td>2025-11-23</td>
+                    <td>{{ $order->created_at }}</td>
                     <td><a href="/a/details/{{ $order->id }}">Detail Pesanan</a></td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
-</main>
-
+</div>
 @endsection
+
+@pushOnce('scripts')
+<script>
+    function zoomOut () {
+
+    }
+</script>
+@endPushOnce
