@@ -17,20 +17,24 @@ class Order extends Model
         'note',
         'address',
         'phone',
+        'orders_receipt',
+        'comment',
+        'star',
 
     ];
-    
-    public function order_details () {
+
+    public function order_details()
+    {
         return $this->hasMany(OrderDetail::class);
     }
 
-    public function user () {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function delivery () {
+    public function delivery()
+    {
         return $this->belongsTo(DeliveryMethod::class);
     }
-
-    
 }

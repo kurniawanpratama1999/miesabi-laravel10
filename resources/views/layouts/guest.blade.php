@@ -5,9 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title', 'MIESABI')</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head> 
+    </head>
     <body>
         <x-navbar-guest/>
-        @yield('section')
+        <main style="min-height: 100dvh; padding-top: 3.5rem" class="bg-yellow-100">
+            @yield('section')
+        </main>
     </body>
 </html>

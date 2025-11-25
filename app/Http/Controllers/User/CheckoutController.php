@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\DeliveryMethod;
 use App\Models\Order;
 use App\Models\OrderDetail;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
 class CheckoutController extends Controller
 {
-    private static function processOrderDetails ($paramOrderDetails) {
+    private static function processOrderDetails($paramOrderDetails)
+    {
         $orderDetails = [];
         foreach ($paramOrderDetails as $orderDetail) {
             $product = DB::table('products as p')
@@ -37,12 +38,13 @@ class CheckoutController extends Controller
         if (!$arrCheckouts) {
             return redirect()->route('menu.index');
         }
-        
+
         $orders = $arrCheckouts['orders'];
         $orderDetails = $this->processOrderDetails($arrCheckouts['order_details']);
         $delivery = DeliveryMethod::where('id', '=', $orders['delivery_id'])->first();
+        $payment_with = $orders['payment_with'];
 
-        return view('pages.user.checkout', compact('orders', 'orderDetails', 'delivery'));
+        return view('pages.user.checkout', compact('orders', 'orderDetails', 'delivery', 'payment_with'));
     }
 
     public function store()
@@ -52,7 +54,7 @@ class CheckoutController extends Controller
 
         $orders = $arrCheckouts['orders'];
         $orderDetails = $this->processOrderDetails($arrCheckouts['order_details']);
-        
+
         $orders['user_id'] = Auth::user()->id;
         $orders['code'] = uniqid(Auth::user()->id);
         $orders['payment_status'] = 1;
@@ -60,10 +62,10 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
-            $createOrder=Order::create($orders);
+            $createOrder = Order::create($orders);
 
             $order_id = $createOrder->id;
-            
+
             foreach ($orderDetails as $orderDetail) {
                 $sendToOrderDetail = [
                     "order_id" => $order_id,
@@ -77,11 +79,11 @@ class CheckoutController extends Controller
             }
 
             DB::commit();
-            
+
             if ($orders['payment_with'] === 0) {
                 return response()->json(['success' => true, 'redirect' => route('orders.show', Auth::user()->id)]);
             }
-            
+
             session()->put('checkoutController.checkoutToPayment', [
                 "order_id" => $order_id,
                 "delivery_id" => $orders['delivery_id'],

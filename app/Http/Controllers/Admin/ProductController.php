@@ -22,7 +22,7 @@ class ProductController extends Controller
         // ambil semua data
         $datas = DB::table('products')
             ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
-            ->select('products.id', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
+            ->select('products.id', 'products.photo', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
             ->orderBy('name')
             ->get();
 
@@ -40,7 +40,7 @@ class ProductController extends Controller
         // ambil semua data
         $datas = DB::table('products')
             ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
-            ->select('products.id', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
+            ->select('products.id', 'products.photo', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
             ->orderBy('name')
             ->get();
 
@@ -61,16 +61,29 @@ class ProductController extends Controller
     {
         // LOGIKA dan PERINTAH untuk MENAMBAH (Create) data ke DB_table "categories"
         try {
+            DB::beginTransaction();
             $validate = $req->validate([
+                'photo' => ['required', 'file', 'size:2404', 'mimes:png,jpg'],
                 'name' => ['required', 'string'],
                 'category_id' => ['required', 'integer'],
                 'price' => ['required', 'numeric'],
                 'stock' => ['required', 'numeric']
             ]);
 
-            Product::create($validate);
+            $photoPath = $validate['photo']->store('products', 'public');
+
+            Product::create([
+                'photo' => $photoPath,
+                'name' => $validate['name'],
+                'category_id' => $validate['category_id'],
+                'price' => $validate['price'],
+                'stock' => $validate['stock']
+            ]);
+
+            DB::commit();
             return redirect()->route('products.index');
         } catch (\Throwable $th) {
+            DB::rollback();
             return back()->withInput();
         }
     }
@@ -80,7 +93,9 @@ class ProductController extends Controller
         // LOGIKA dan PERINTAH untuk UPDATE (update) data ke DB_table "categories"
         // BERDASARKAN ID yang sudah ditentukan pada tampilan EDIT.
         try {
+            DB::beginTransaction();
             $validate = $req->validate([
+                'photo' => ['nullable', 'file', 'max:2048', 'mimes:png,jpg'],
                 'name' => ['required', 'string'],
                 'category_id' => ['required', 'integer'],
                 'price' => ['required', 'numeric'],
@@ -88,16 +103,46 @@ class ProductController extends Controller
             ]);
 
             $findByID = Product::findOrFail($id);
-            $findByID->update($validate);
 
+            if ($req->hasFile('photo')) {
+
+                // Hapus foto lama jika ada
+                if ($findByID->photo && file_exists(storage_path('app/public/' . $findByID->photo))) {
+                    unlink(storage_path('app/public/' . $findByID->photo));
+                }
+
+                // Upload foto baru
+                $photoPath = $req->file('photo')->store('products', 'public');
+
+                // Update dengan foto baru
+                $findByID->update([
+                    'photo'       => $photoPath,
+                    'name'        => $validate['name'],
+                    'category_id' => $validate['category_id'],
+                    'price'       => $validate['price'],
+                    'stock'       => $validate['stock']
+                ]);
+            } else {
+                // Update tanpa mengganti foto
+                $findByID->update([
+                    'name'        => $validate['name'],
+                    'category_id' => $validate['category_id'],
+                    'price'       => $validate['price'],
+                    'stock'       => $validate['stock']
+                ]);
+            }
+
+            DB::commit();
             return redirect()->route('products.index');
         } catch (\Throwable $th) {
+            DB::rollback();
             return back()->withInput();
         }
     }
 
     public function destroy(int $id)
     {
-        // LOGIKA dan PERINTAH untuk DELETE (delete) data ke DB_table "categories"
+        Product::destroy($id);
+        return redirect()->route('products.index');
     }
 }

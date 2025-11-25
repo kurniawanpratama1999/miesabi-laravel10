@@ -9,7 +9,9 @@
     </head>
     <body>
         <x-navbar-admin/>
-        @yield('content')
+        <main style="min-height: 100dvh; padding-top: 3.5rem" class="bg-yellow-100">
+            @yield('content')
+        </main>
         @stack('scripts')
     </body>
 </html>

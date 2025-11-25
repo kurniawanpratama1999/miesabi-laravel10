@@ -8,32 +8,29 @@
 
     <div class="table-responsive">
         <table class="table table-striped align-middle text-center">
-            <thead class="table-dark">
+            <thead>
                 <tr>
-                    <th>Gambar Produk</th>
-                    <th>Nama Produk</th>
-                    <th>Variant</th>
-                    
-                    <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>Total</th>
+                    <th class="text-nowrap">Gambar Produk</th>
+                    <th class="text-nowrap">Nama Produk</th>
+                    <th class="text-nowrap">Variant</th>
+                    <th class="text-nowrap">Harga</th>
+                    <th class="text-nowrap">Jumlah</th>
+                    <th class="text-nowrap">Total</th>
                 </tr>
             </thead>
             <tbody>
             @foreach ($orderDetails as $orderDetail)
-            <script>
-            </script>
                 <tr>
-                    <td>{{ $orderDetail->product->name }}</td>
-                    <td>{{ $orderDetail->product->name }}</td>
-                    <td>{{ $orderDetail->variant->name ?? "-" }}</td>
-                    <td>{{ $orderDetail->product->price }}</td>
-                    <td>{{ $orderDetail->quantity }}</td>
-                    <td>{{ $orderDetail->quantity * $orderDetail->product->price }}</td>
+                    <td class="text-nowrap">{{ $orderDetail->product->name }}</td>
+                    <td class="text-nowrap">{{ $orderDetail->product->name }}</td>
+                    <td class="text-nowrap">{{ $orderDetail->variant->name ?? "-" }}</td>
+                    <td class="text-nowrap">Rp {{ number_format($orderDetail->product->price, 0, ',', '.') }}</td>
+                    <td class="text-nowrap">{{ $orderDetail->quantity }}</td>
+                    <td class="text-nowrap">Rp {{ number_format($orderDetail->quantity * $orderDetail->product->price, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
             </tbody>
-            
+
         </table>
     </div>
 </main>

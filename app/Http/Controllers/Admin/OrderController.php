@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function index () {
+    public function index()
+    {
         $orders = DB::table('orders as o')
             ->select(
                 'o.user_id',
@@ -41,14 +42,18 @@ class OrderController extends Controller
         // return 'a';
         return view('pages.admin.order.ReadDelete', compact('orders'));
     }
-    public function updatePaymentStatus (int $order_id) {
+    public function updatePaymentStatus(int $order_id)
+    {
         $orderById = Order::findOrFail($order_id);
         $orderById->update([
             'payment_status' => 2
         ]);
+
+        return redirect('/a/orders');
     }
 
-    public function updateOrderStatus (int $order_id) {
+    public function updateOrderStatus(int $order_id)
+    {
         $orderById = Order::findOrFail($order_id);
         if ($orderById->order_status >= 7) {
             return back();
@@ -62,11 +67,12 @@ class OrderController extends Controller
         return redirect('/a/orders');
     }
 
-    public function rollbackOrderStatus (int $order_id) {
+    public function rollbackOrderStatus(int $order_id)
+    {
         $orderById = Order::findOrFail($order_id);
         if ($orderById->order_status <= 1) {
             return back();
-        } 
+        }
 
         $orderById->update([
             'order_status' => $orderById->order_status - 1

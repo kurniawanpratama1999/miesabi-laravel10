@@ -95,7 +95,7 @@
                         <div class="d-flex flex-column gap-2 text-center">
                             <span>{{ $payment_status }}</span>
 
-                            @if ($order->payment_status == 1 && $order->payment_with == 1)
+                            @if ($order->payment_status == 1)
                             <form action="{{ route('u.orders.payment', $order->id) }}" method="post">
                                 @csrf
                                 @method('PUT')

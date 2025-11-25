@@ -8,16 +8,16 @@
 
     <div class="table-responsive">
         <table class="table table-striped align-middle text-center">
-            <thead class="table-dark">
-                <tr>
+            <thead>
+                <tr class="bg-yellow-500">
                     <th>Kode</th>
                     <th>Pembayaran</th>
-                    <th>Status Bayar</th>
-                    <th>Pengiriman</th>
-                    <th>Status Pesanan</th>
-                    <th>Total</th>
-                    <th>Tanggal</th>
-                    <th>Detail</th>
+                    <th class="text-nowrap">Status Bayar</th>
+                    <th class="text-nowrap">Pengiriman</th>
+                    <th class="text-nowrap">Status Pesanan</th>
+                    <th class="text-nowrap">Total</th>
+                    <th class="text-nowrap">Tanggal</th>
+                    <th class="text-nowrap">Detail</th>
                 </tr>
             </thead>
 
@@ -29,20 +29,21 @@
 
                     {{-- Payment Method --}}
                     <td>
-                        @if($order->payment_with == 0)
-                            <span class="badge bg-warning text-dark">Tunai</span>
-                        @else
-                            <span class="badge bg-primary">QRIS</span>
-                        @endif
+                        @switch($order->payment_with)
+                            @case(1) <span class="badge bg-warning text-dark">Tunai</span> @break
+                            @case(2) <span class="badge bg-primary">QRIS</span> @break
+                        @endswitch
                     </td>
 
                     {{-- Payment Status --}}
                     <td>
                         @switch($order->payment_status)
-                            @case(1) 
+                            @case(1)
                                 <div class="d-flex flex-column gap-2 text-center">
                                     <span class="badge bg-danger">Belum Lunas</span>
+                                    @if($order->payment_with == 2)
                                     <a href="{{ route('scanqr.show', $order->id) }}" class="badge bg-primary">Bayar</a>
+                                    @endif
                                 </div>
                                 @break
 
@@ -67,7 +68,7 @@
                             @case(2) <span class="badge bg-warning text-dark">Sudah Dikonfirmasi</span> @break
                             @case(3) <span class="badge bg-info text-dark">Pesanan diproses</span> @break
                             @case(4) <span class="badge bg-primary">Pesanan Siap</span> @break
-                            @case(5) 
+                            @case(5)
                                 <div class="d-flex flex-column gap-1">
                                     <span class="badge bg-secondary">Dalam Pengiriman / Siap Diambil</span>
                                     <form action="{{ route('orders.update', $order->id) }}" method="POST">
@@ -77,7 +78,7 @@
                                     </form>
                                 </div>
                                 @break
-                            @case(6) 
+                            @case(6)
                                 <div class="d-flex flex-column gap-1">
                                     <span class="badge bg-secondary">Pesanan Sampai</span>
                                     <form action="{{ route('orders.update', $order->id) }}" method="POST">
@@ -91,12 +92,12 @@
                         @endswitch
                     </td>
 
-                    <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                    <td class="text-nowrap">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
 
-                    <td>{{ $order->created_at }}</td>
+                    <td class="text-nowrap">{{ $order->created_at }}</td>
 
                     <td>
-                        <a href="/u/details/{{ $order->id }}" 
+                        <a href="/u/details/{{ $order->id }}"
                            class="btn btn-sm btn-outline-primary">
                             Detail
                         </a>

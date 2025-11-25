@@ -11,6 +11,7 @@ class Category extends Model
     ];
 
     public function products () {
+        // KATEGORI -> PUNYA BANYAK -> PRODUK
         return $this->hasMany(Product::class);
     }
 }

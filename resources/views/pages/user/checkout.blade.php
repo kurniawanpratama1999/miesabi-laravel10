@@ -3,12 +3,10 @@
 @section('title', 'Pesanan | Mie Sabi')
 
 @section('section')
-    <main style="min-height: calc(100dvh - 3.5rem);" class="row overflow-hidden container-fluid mx-auto bg-young-brown">
         <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.7);" class="mx-auto py-4">
-            <h4>Rincian Harga</h4>
+            <h4 class="text-center mb-4">Rincian Harga</h4>
             <div>
-                <h5>Total Pesanan</h5>
-                <div class="d-flex flex-column gap-4">
+                <div class="d-flex flex-column gap-2">
 
                     @foreach($orderDetails as $product)
                     <div class="row justify-content-between">
@@ -17,20 +15,37 @@
                         </div>
                         <div class="col-6 row">
                             <span class="col-6">x{{ $product->quantity }}</span>
-                            <span class="col-6">{{ $product->total }}</span>
+                            <span class="col-6 text-end">Rp {{ number_format($product->total, 0, ',', '.') }}</span>
                         </div>
                     </div>
                     @endforeach
                 </div>
             </div>
 
-            <div class="mt-5">
-                <h5>Opsi Pengiriman</h5>
-                <div style="width: fit-content;">
-                    <div style="width: 150px; height: 150px;" class="border mb-2">
-
+            <div class="row mt-4">
+                <div class="col-6">
+                    <div class="text-center rounded p-1 mb-3 bg-yellow-300">
+                        @switch($delivery->id)
+                            @case(1) <i class="bi bi-shop fs-3"></i> @break
+                            @case(2) <i class="bi bi-truck-front fs-3"></i> @break
+                        @endswitch
+                        <span class="d-block text-center">{{ $delivery->name }}</span>
                     </div>
-                    <span class="d-block text-center">{{ $delivery->name }}</span>
+                </div>
+
+                <div class="col-6">
+                    <div  class="text-center rounded p-1 mb-3 bg-yellow-300">
+                        @switch($payment_with)
+                            @case(1) <i class="bi bi-cash-coin fs-3"></i> @break
+                            @case(2) <i class="bi bi-qr-code-scan fs-3"></i> @break
+                        @endswitch
+                        <span class="d-block text-center">
+                            @switch($payment_with)
+                                @case(1) Tunai @break
+                                @case(2) QRIS @break
+                            @endswitch
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -39,33 +54,23 @@
                 $totalPesanan = collect($orderDetails)->sum('total');
                 $totalPembayaran = $biayaPengiriman + $totalPesanan;
             @endphp
-            <div class="mt-5">
+            <div class="mt-2">
                 <div class="row">
                     <span class="col-6">Biaya Pengiriman</span>
-                    <span class="col-6 d-block text-end">{{ $biayaPengiriman }}</span>
+                    <span class="col-6 d-block text-end">Rp {{ number_format($biayaPengiriman, 0, ',', '.') }}</span>
                 </div>
                 <div class="row">
                     <span class="col-6">Total Pesanan</span>
-                    <span class="col-6 d-block text-end">{{ $totalPesanan }}</span>
-                </div>
-                <div class="row">
-                    <span class="col-6">Metode Pembayaran</span>
-                    <span class="col-6 d-block text-end">
-                        @switch ($orders['payment_with'])
-                            @case (1) Tunai @break
-                            @case (2) QRIS @break
-                        @endswitch
-                    </span>
+                    <span class="col-6 d-block text-end">Rp {{ number_format($totalPesanan, 0, ',', '.') }}</span>
                 </div>
                 <div class="row">
                     <span class="col-6">Total Pembayaran</span>
-                    <span class="col-6 d-block text-end">{{ $totalPembayaran }}</span>
+                    <span class="col-6 d-block text-end">Rp {{ number_format($totalPembayaran, 0, ',', '.') }}</span>
                 </div>
             </div>
 
-            <button onclick="makeOrder()" type="button" class="border-0 bg-success px-3 py-1 mt-5 mx-auto d-block text-white">Buat Pesanan</button>
+            <button onclick="makeOrder()" type="button" class="border-0 bg-yellow-500 px-3 py-2 mt-5 mx-auto d-block text-white rounded">Buat Pesanan</button>
         </section>
-    </main>
 @endsection
 
 @pushOnce('scripts')

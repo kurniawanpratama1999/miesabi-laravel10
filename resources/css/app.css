@@ -365,3 +365,8 @@
 .text-gray-900 {
     color: var(--gray-900);
 }
+
+.col-xxl-1 {
+    flex: 0 0 auto;
+    width: 13.3%;
+}

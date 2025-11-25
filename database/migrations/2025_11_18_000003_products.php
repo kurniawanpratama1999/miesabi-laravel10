@@ -17,7 +17,7 @@ return new class extends Migration
             $col->foreignId('category_id')
                 ->constrained('categories')
                 ->restrictOnDelete();
-
+            $col->text('photo')->default(null)->nullable();
             $col->string('name');
             $col->decimal('price', 10, 2);
             $col->integer('stock')->default(0);

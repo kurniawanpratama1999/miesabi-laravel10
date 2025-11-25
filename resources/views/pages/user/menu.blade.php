@@ -8,19 +8,23 @@
             @foreach ($dbTableProducts as $product)
                 <div id="product-{{ $product->id }}" class="col-6 col-sm-4 col-lg-3 col-xl-2 p-2">
                     <div class="bg-yellow-200">
-                        <div id="p-image" style="aspect-ratio: 1/1;" class="border-bottom"></div>
+                        <div id="p-image" style="aspect-ratio: 1/1;" class="p-2">
+                            @if ($product->photo)
+                                <img src="{{ asset('storage/' . $product->photo) }}" style="object-position: center" class="object-fit-cover rounded" width="100%" height="100%">
+                            @endif
+                        </div>
                         <div class="p-3">
                             <div class="d-flex flex-column">
                                 <span id="p-name" class="text-center fw-bold">{{ $product->name }}</span>
                                 <span id="p-category" class="text-center fw-bold d-none">{{ $product->category_name }}</span>
                                 <span id="p-price" class="text-center">{{ $product->price }}</span>
                             </div>
-    
+
                             @if(Auth::check())
                                 <div class="d-flex gap-2 justify-content-center mt-3">
-                                    <button onclick="handleProductCounter('-', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0 bg-red-400">-</button>
-                                    <input id="p-quantity-{{ $product->id }}" type="number" style="width: 70px; border: 0; outline-0" class="bg-transparent text-center" value="0" autocomplete="off">
-                                    <button onclick="handleProductCounter('+', {{ $product->id }})" style="min-width: 30px; min-height: 30px; max-width: 30px; max-height: 30px" class="rounded-circle border-0 bg-green-400">+</button>
+                                    <button onclick="handleProductCounter('-', {{ $product->id }})" class="bi bi-dash-circle-fill border-0 bg-transparent p-0 text-red-500 fs-4"></button>
+                                    <input id="p-quantity-{{ $product->id }}" type="number" class="form-control form-control-color text-center bg-transparent border-0" value="0" autocomplete="off">
+                                    <button onclick="handleProductCounter('+', {{ $product->id }})" class="bi bi-plus-circle-fill border-0 bg-transparent p-0 text-green-500 fs-4"></button>
                                 </div>
                             @else
                                 <a href="{{ route('login') }}" class="link-success text-center d-block mt-3">Beli</a>
@@ -75,7 +79,7 @@
                     findProductByID.quantity -= 1;
                     inputQuantityElement.value = findProductByID.quantity
                 }
-                
+
             }
 
             changeCartPopup()
