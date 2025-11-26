@@ -67,7 +67,7 @@ class ProductController extends Controller
                 'name' => ['required', 'string'],
                 'category_id' => ['required', 'integer'],
                 'price' => ['required', 'numeric'],
-                'stock' => ['required', 'numeric']
+                'stock' => ['required', 'nDB::beginTransaction();umeric']
             ]);
 
             $photoPath = $validate['photo']->store('products', 'public');
@@ -90,8 +90,6 @@ class ProductController extends Controller
 
     public function update(Request $req, int $id)
     {
-        // LOGIKA dan PERINTAH untuk UPDATE (update) data ke DB_table "categories"
-        // BERDASARKAN ID yang sudah ditentukan pada tampilan EDIT.
         try {
             DB::beginTransaction();
             $validate = $req->validate([
@@ -111,10 +109,8 @@ class ProductController extends Controller
                     unlink(storage_path('app/public/' . $findByID->photo));
                 }
 
-                // Upload foto baru
                 $photoPath = $req->file('photo')->store('products', 'public');
 
-                // Update dengan foto baru
                 $findByID->update([
                     'photo'       => $photoPath,
                     'name'        => $validate['name'],
@@ -123,7 +119,6 @@ class ProductController extends Controller
                     'stock'       => $validate['stock']
                 ]);
             } else {
-                // Update tanpa mengganti foto
                 $findByID->update([
                     'name'        => $validate['name'],
                     'category_id' => $validate['category_id'],

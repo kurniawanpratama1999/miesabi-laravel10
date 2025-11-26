@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Guest\{LoginController, RegisterController};
-use App\Http\Controllers\Admin\{CategoryController, DeliveryController, VariantController, ProductController, OrderController as AdminOrderController,OrderDetailController as AdminOrderDetailController, UserController};
+use App\Http\Controllers\Admin\{CategoryController, DeliveryController, VariantController, ProductController, OrderController as AdminOrderController,OrderDetailController as AdminOrderDetailController, UserController, BarcodeController};
 use App\Http\Controllers\User\{MenuController, CartController, CheckoutController,ScanQrController, OrderController as UserOrderController, OrderDetailController as UserOrderDetailController};
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('orders', AdminOrderController::class);
             
             Route::resource('details', AdminOrderDetailController::class);
+            Route::resource('barcode', BarcodeController::class);
         });
     });
     
