@@ -1,19 +1,22 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /* =======================================================================================================  
+    /* =======================================================================================================
     Kolom yang harus di isi adalah :
-        - name -> maksudnya nama dari kategori produk seperti "Makanan", "Minuman", "Snack", "Desert", "dll" 
+        - name -> maksudnya nama dari kategori produk seperti "Makanan", "Minuman", "Snack", "Desert", "dll"
     ======================================================================================================== */
 
-    public function index () {
+    public function index()
+    {
         // MENAMPILKAN DAFTAR (read) Kategori Produk dari DB_Table "categories"
-        
+
         // ambil semua data
         $datas = Category::orderBy('name', 'asc')->get();
 
@@ -22,9 +25,10 @@ class CategoryController extends Controller
         return view('pages.admin.category.CreateReadUpdateDelete', compact("datas"));
     }
 
-    public function edit (int $id) {
+    public function edit(int $id)
+    {
         // MENAMPILKAN DAFTAR (read) Kategori Produk dari DB_Table "categories"
-        
+
         // ambil semua data
         $datas = Category::orderBy('name', 'asc')->get();
 
@@ -33,11 +37,14 @@ class CategoryController extends Controller
 
         // kembalikan function untuk render halaman 'display' dan lempar variable $datas
         // agar $datas bisa digunakan pada halaman kategori
-        return view('pages.admin.category.CreateReadUpdateDelete', 
-        compact("datas",'category'));
+        return view(
+            'pages.admin.category.CreateReadUpdateDelete',
+            compact("datas", 'category')
+        );
     }
 
-    public function store (Request $req) {
+    public function store(Request $req)
+    {
         // LOGIKA dan PERINTAH untuk MENAMBAH (Create) data ke DB_table "categories"
         try {
             $validate = $req->validate([
@@ -45,13 +52,14 @@ class CategoryController extends Controller
             ]);
 
             Category::create($validate);
-            return redirect()->route('categories.index'); 
+            return redirect()->route('a.categories.index');
         } catch (\Throwable $th) {
-            return back()->withInput(); 
+            return back()->withInput();
         }
     }
 
-    public function update (Request $req, int $id) {
+    public function update(Request $req, int $id)
+    {
         // LOGIKA dan PERINTAH untuk UPDATE (update) data ke DB_table "categories"
         // BERDASARKAN ID yang sudah ditentukan pada tampilan EDIT.
         try {
@@ -61,13 +69,14 @@ class CategoryController extends Controller
             $findByID = Category::findOrFail($id);
             $findByID->update($validate);
 
-            return redirect()->route('categories.index'); 
+            return redirect()->route('a.categories.index');
         } catch (\Throwable $th) {
-            return back()->withInput(); 
+            return back()->withInput();
         }
     }
 
-    public function destroy (int $id) {
+    public function destroy(int $id)
+    {
         // LOGIKA dan PERINTAH untuk DELETE (delete) data ke DB_table "categories"
     }
 }

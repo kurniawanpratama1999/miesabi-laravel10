@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class OrderController extends Controller
+class ReviewController extends Controller
 {
     public function index()
     {
@@ -22,12 +22,11 @@ class OrderController extends Controller
                 'o.id',
                 'o.code',
                 'o.user_id',
-                'u.name as user_name',
-                'o.orders_receipt',
                 'o.payment_with',
                 'o.payment_status',
                 'o.order_status',
-                'o.address',
+                'o.stars',
+                'o.comment',
                 'o.created_at',
                 'd.id as delivery_id',
                 'd.name as delivery_name',
@@ -35,16 +34,16 @@ class OrderController extends Controller
                 DB::raw('SUM((COALESCE(v.price, 0) + p.price) * od.quantity) as subtotal'),
                 DB::raw('SUM((COALESCE(v.price, 0) + p.price) * od.quantity) + d.price as total_price')
             )
+            ->where('o.user_id', '=', Auth::user()->id)
             ->groupBy(
                 'o.id',
                 'o.code',
                 'o.user_id',
-                'u.name',
-                'o.orders_receipt',
                 'o.payment_with',
                 'o.payment_status',
                 'o.order_status',
-                'o.address',
+                'o.stars',
+                'o.comment',
                 'o.created_at',
                 'd.id',
                 'd.name',
@@ -52,44 +51,28 @@ class OrderController extends Controller
             )
             ->get();
 
-        return view('pages.admin.order.ReadDelete', compact('orders'));
+        return view('pages.user.ulasan', compact('orders'));
     }
-    public function updatePaymentStatus(int $order_id)
+    public function show(int $id)
     {
-        $orderById = Order::findOrFail($order_id);
-        $orderById->update([
-            'payment_status' => 2
+        $orders = Order::where('user_id', '=', Auth::user()->id)
+            ->where('order_status', '=', 7)
+            ->get();
+
+        $order = Order::findOrFail($id);
+        return view('pages.user.ulasan', compact('orders', 'order'));
+    }
+    public function update(Request $req, int $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $validate = $req->validate([
+            'star' => ['required', 'integer', 'between:1,5'],
+            'comment' => ['required', 'string', 'max:500']
         ]);
 
-        return redirect()->route('a.orders.index');
-    }
+        $order->update($validate);
 
-    public function updateOrderStatus(int $order_id)
-    {
-        $orderById = Order::findOrFail($order_id);
-        if ($orderById->order_status >= 7) {
-            return back();
-        }
-
-        $updateNumber = $orderById->order_status + 1;
-        $orderById->update([
-            'order_status' => $updateNumber
-        ]);
-
-        return redirect()->route('a.orders.index');
-    }
-
-    public function rollbackOrderStatus(int $order_id)
-    {
-        $orderById = Order::findOrFail($order_id);
-        if ($orderById->order_status <= 1) {
-            return back();
-        }
-
-        $orderById->update([
-            'order_status' => $orderById->order_status - 1
-        ]);
-
-        return redirect()->route('a.orders.index');
+        return redirect()->route('u.orders.index');
     }
 }

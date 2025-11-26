@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Barcode | Miesabi')
+@section('title', 'Logo | Miesabi')
 
 @section('content')
         <div class="container">
             <section class="pt-3">
-                <form enctype="multipart/form-data" style="width: 350px;" class="row bg-yellow-400 rounded p-3 mb-4 mx-auto" method="POST" action="{{ isset($data, $data->photo) ? route('a.barcode.update', $data->id) : route('a.barcode.store')  }}">
+                <form enctype="multipart/form-data" style="width: 350px;" class="row bg-yellow-400 rounded p-3 mb-4 mx-auto" method="POST" action="{{ isset($data, $data->photo) ? route('a.logo.update', $data->id) : route('a.logo.store')  }}">
                     <div style="width: 300px; aspect-ratio: 1/1;" class="overflow-hidden mx-auto">
                         @if ($data && $data->photo)
                             <img src="{{ asset('storage/' . $data->photo) }}" class="w-100 h-100 object-fit-contain rounded">
@@ -17,7 +17,7 @@
                     @endif
                     <div class="col-12 p-3">
                         <div>
-                            <label for="photo" class="form-label">Barcode</label>
+                            <label for="photo" class="form-label">Logo</label>
                             <input type="file" class="form-control" name="photo" id="photo" value="{{ ($data && $data->photo) ? $data->photo : "" }}">
                         </div>
                     </div>

@@ -11,13 +11,13 @@
     <div class="offcanvas-body">
       <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
         <li class="nav-item">
-            <a class="nav-link text-white" href="/a/users">Users</a>
+            <a class="nav-link text-white" href="{{ route('a.users.index') }}">Users</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="{{ route('products.index') }}">Produk</a>
+            <a class="nav-link text-white" href="{{ route('a.products.index') }}">Produk</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/a/orders">Pesanan</a>
+          <a class="nav-link text-white" href="{{ route('a.orders.index') }}">Pesanan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="#">Riwayat</a>

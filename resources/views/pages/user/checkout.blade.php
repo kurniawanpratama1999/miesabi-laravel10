@@ -76,7 +76,7 @@
 @pushOnce('scripts')
 <script>
     async function makeOrder() {
-        const api = await fetch('/u/checkout', {
+        const api = await fetch("{{ route('u.checkout.store') }}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

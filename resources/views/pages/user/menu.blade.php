@@ -92,7 +92,7 @@
 
             if (!countingQuantity) return;
 
-            const HIT_API = await fetch('/u/menu', {
+            const HIT_API = await fetch("{{ route('u.menu.store') }}", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",

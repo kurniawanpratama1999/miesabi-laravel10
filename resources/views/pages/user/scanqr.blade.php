@@ -6,16 +6,16 @@
         <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.2);" class="mx-auto py-4">
             <h3 class="text-center mb-3">QR SCAN</h3>
             <div style="max-width: 300px; min-width: 300px; max-height: 300px; min-height: 300px;" class="border mx-auto">
-
+                <img src="{{ $barcode->photo }}" alt="">
             </div>
 
-            
+
             <div class="mt-4 d-flex flex-column align-items-center">
                 <span class="fw-bold fs-4">Total Pembayaran</span>
                 <span class="fw-bold fs-4">Rp {{ number_format($total, 0, ',', '.') }}</span>
             </div>
-            
-            <form enctype="multipart/form-data" action="{{ route('scanqr.update', $order_id) }}" method="post" class="py-2 px-4 mt-3">
+
+            <form enctype="multipart/form-data" action="{{ route('u.scanqr.update', $order_id) }}" method="post" class="py-2 px-4 mt-3">
                 @csrf
                 @method("PUT")
                 <div class="col-12">
@@ -29,6 +29,6 @@
 
 @pushOnce('scripts')
     <script>
-        
+
     </script>
 @endPushOnce

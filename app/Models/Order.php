@@ -19,7 +19,7 @@ class Order extends Model
         'phone',
         'orders_receipt',
         'comment',
-        'star',
+        'stars',
 
     ];
 

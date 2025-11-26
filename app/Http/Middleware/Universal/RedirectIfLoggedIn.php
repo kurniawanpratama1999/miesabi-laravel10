@@ -17,12 +17,12 @@ class RedirectIfLoggedIn
     {
         if (auth()->check()) {
             $user = auth()->user();
-            
+
             if ($user->role === 'admin') {
-                return redirect()->route('products.index');
+                return redirect()->route('a.products.index');
             }
 
-            return redirect()->route('menu.index');
+            return redirect()->route('u.menu.index');
         }
         return $next($request);
     }

@@ -51,7 +51,7 @@ class VariantController extends Controller
             ]);
 
             Variant::create($validate);
-            return redirect()->route('variants.index');
+            return redirect()->route('a.variants.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }
@@ -68,14 +68,11 @@ class VariantController extends Controller
             $findByID = Variant::findOrFail($id);
             $findByID->update($validate);
 
-            return redirect()->route('variants.index');
+            return redirect()->route('a.variants.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }
     }
 
-    public function destroy(int $id)
-    {
-
-    }
+    public function destroy(int $id) {}
 }

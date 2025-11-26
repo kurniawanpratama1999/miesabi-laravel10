@@ -3,62 +3,9 @@
 @section('title', 'Pengantaran | Miesabi')
 
 @section('content')
-    {{-- <main>
-        <section>
-            <h2>Jenis Pengantaran</h2>
-            <form method="POST" action="{{ isset($delivery) ? route('delivery.update', $delivery->id) : route('delivery.store')  }}">
-                @csrf
-                @if(isset($delivery))
-                    @method('PUT')
-                @endif
-                <label for="name">
-                    <input type="text" name="name" id="name" value="{{ $delivery->name ?? '' }}">
-                </label>
-                <label for="price">
-                    <input type="text" name="price" id="price" value="{{ $delivery->price ?? '' }}">
-                </label>
-                
-                <div>
-                    <button type="submit">{{ isset($delivery) ? "Simpan" : "Tambah" }}</button>
-                    @if(isset($delivery))
-                        <a href="{{ route('delivery.index') }}">Kembali</a>
-                    @endif
-                </div>
-            </form>
-        </section>
-
-        <section>
-            <table id="datas">
-                <tr class="header">
-                    <th>Jenis</th>
-                    <th>Harga</th>
-                    <th>Aksi</th>
-                </tr>
-                @foreach ($datas as $data)
-                    <tr class="data-{{ $data->id }}">
-                        <td>
-                            <a href="{{ route('delivery.edit', $data->id) }}">{{ $data->name }}</a>
-                        </td>
-                        <td>
-                            <a href="{{ route('delivery.edit', $data->id) }}">{{ $data->price }}</a>
-                        </td>
-                        <td>
-                            <form method="POST" action="{{ route("delivery.destroy", $data->id) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">DELETE</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </table>
-        </section>
-        
-    </main> --}}
-
     <div class="container">
-        <section class="pt-3">
-            <form class="row bg-yellow-400 rounded p-3 mb-4 w-50 mx-auto" method="POST" action="{{ isset($delivery) ? route('deliveries.update', $delivery->id) : route('deliveries.store')  }}">
+        <section class="pt-3 row px-3">
+            <form class="col-12 col-lg-6 row bg-yellow-400 rounded p-3 mb-4 mx-auto" method="POST" action="{{ isset($delivery) ? route('a.deliveries.update', $delivery->id) : route('a.deliveries.store')  }}">
                 @csrf
                 @if(isset($delivery))
                     @method('PUT')
@@ -79,7 +26,7 @@
 
                 <div class="d-flex align-items-center gap-3 justify-content-end">
                     @if(isset($delivery))
-                        <a href="{{ route('deliveries.index') }}" class="link-dark fw-bold">Kembali</a>
+                        <a href="{{ route('a.deliveries.index') }}" class="link-dark fw-bold">Kembali</a>
                     @endif
                     <button type="submit" class="d-block border-0 bg-yellow-500 py-2 px-4 rounded text-white">{{ isset($delivery) ? "Simpan" : "Tambah" }}</button>
                 </div>
@@ -87,13 +34,15 @@
         </section>
 
         <section class="">
-            <div class="d-block d-md-flex align-items-center gap-5">
-                <h3>Produk Setting</h3>
-                <a href="{{ route('products.index') }}" class="ms-auto nav-link">Products</a>
-                <a href="{{ route('categories.index') }}" class="nav-link">Categories</a>
-                <a href="{{ route('variants.index') }}" class="nav-link">Variants</a>
-                <a href="{{ route('deliveries.index') }}" class="nav-link">Deliveries</a>
-            </div>
+            <div class="d-block d-md-flex align-items-center gap-5 py-2 justify-content-lg-between">
+                    <h3 class="text-center text-lg-left">Produk Setting</h3>
+                    <div class="d-flex align-items-center justify-content-between gap-lg-5">
+                        <a href="{{ route('a.products.index') }}" class="nav-link">Products</a>
+                        <a href="{{ route('a.categories.index') }}" class="nav-link">Categories</a>
+                        <a href="{{ route('a.variants.index') }}" class="nav-link">Variants</a>
+                        <a href="{{ route('a.deliveries.index') }}" class="nav-link">Deliveries</a>
+                    </div>
+                </div>
             <div class="table-responsive">
                 <table id="datas" class="table table-striped">
                     <thead>
@@ -109,10 +58,10 @@
                                 <td class="align-middle">{{ $data->name }}</td>
                                 <td class="align-middle">Rp {{ number_format($data->price, 0, ',', '.') }}</td>
                                 <td class="align-middle text-nowrap">
-                                    <a href="{{ route('deliveries.edit', $data->id) }}" class="btn btn-outline-primary">
+                                    <a href="{{ route('a.deliveries.edit', $data->id) }}" class="btn btn-outline-primary">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <form method="POST" action="{{ route("deliveries.destroy", $data->id) }}" class="d-inline ms-2">
+                                    <form method="POST" action="{{ route("a.deliveries.destroy", $data->id) }}" class="d-inline ms-2">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger">
@@ -128,15 +77,3 @@
         </section>
     </div>
 @endsection
-
-@pushOnce('scripts')
-    <script>
-        const NAME_TAG_INPUT = document.getElementById('name')
-
-        NAME_TAG_INPUT.addEventListener('keyup', () => {
-            if (NAME_TAG_INPUT.value === "") {
-                location.href = '/delivery';
-            }
-        })
-    </script>
-@endPushOnce

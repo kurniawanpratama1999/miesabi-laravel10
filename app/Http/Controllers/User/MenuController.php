@@ -28,7 +28,7 @@ class MenuController extends Controller
 
         return response()->json([
             "success" => true,
-            "redirect" => route('cart.index')
+            "redirect" => route('u.cart.index')
         ]);
     }
 }

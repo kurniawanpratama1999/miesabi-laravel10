@@ -123,7 +123,7 @@
                         </form>
                     </td>
                     <td>{{ $order->created_at }}</td>
-                    <td><a href="/a/details/{{ $order->id }}">Detail Pesanan</a></td>
+                    <td><a href="{{ route('a.details.show', $order->id) }}">Detail Pesanan</a></td>
                 </tr>
                 @endforeach
             </tbody>
@@ -131,11 +131,3 @@
     </div>
 </div>
 @endsection
-
-@pushOnce('scripts')
-<script>
-    function zoomOut () {
-
-    }
-</script>
-@endPushOnce

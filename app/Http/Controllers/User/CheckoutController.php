@@ -62,7 +62,7 @@ class CheckoutController extends Controller
     {
         $arrCheckouts = session()->get('cartController.cartToCheckout');
         if (!$arrCheckouts) {
-            return redirect()->route('menu.index');
+            return redirect()->route('u.menu.index');
         }
 
         $orders = $arrCheckouts['orders'];
@@ -107,7 +107,7 @@ class CheckoutController extends Controller
             DB::commit();
 
             if ($orders['payment_with'] === 0) {
-                return response()->json(['success' => true, 'redirect' => route('orders.show', Auth::user()->id)]);
+                return response()->json(['success' => true, 'redirect' => route('u.orders.show', Auth::user()->id)]);
             }
 
             session()->put('checkoutController.checkoutToPayment', [
@@ -118,7 +118,7 @@ class CheckoutController extends Controller
 
             session()->forget('menuController.menuToKeranjang');
             session()->forget('cartController.cartToCheckout');
-            return response()->json(['success' => true, 'redirect' => route('scanqr.index')]);
+            return response()->json(['success' => true, 'redirect' => route('u.scanqr.index')]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $th->getMessage()]);

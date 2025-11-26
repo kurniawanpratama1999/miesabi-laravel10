@@ -3,27 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Barcode;
+use App\Models\Logo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class BarcodeController extends Controller
+class LogoController extends Controller
 {
     public function index()
     {
-        $data = Barcode::first();
+        $data = Logo::first();
 
-        return view('pages.admin.barcode.CreateReadUpdateDelete', compact("data"));
+        return view('pages.admin.logo.CreateReadUpdateDelete', compact("data"));
     }
 
     public function edit(int $id)
     {
-        $datas = Barcode::first();
-        $barcode = Barcode::findOrFail($id);
+        $datas = Logo::first();
+        $logo = Logo::findOrFail($id);
 
         return view(
-            'pages.admin.barcode.CreateReadUpdateDelete',
-            compact("datas", 'barcode')
+            'pages.admin.logo.CreateReadUpdateDelete',
+            compact("datas", 'logo')
         );
     }
 
@@ -37,13 +37,13 @@ class BarcodeController extends Controller
 
             DB::beginTransaction();
 
-            $photoPath = $validate['photo']->store('barcode', 'public');
+            $photoPath = $validate['photo']->store('logo', 'public');
 
-            Barcode::create([
+            Logo::create([
                 'photo' => $photoPath
             ]);
             DB::commit();
-            return redirect()->route('a.barcode.index');
+            return redirect()->route('a.logo.index');
         } catch (\Throwable $th) {
             DB::rollback();
             return back()->withInput();
@@ -57,19 +57,19 @@ class BarcodeController extends Controller
                 'photo' => ['required', 'file', 'mimes:png,jpg', 'max:3072'],
             ]);
 
-            $findByID = Barcode::findOrFail($id);
+            $findByID = Logo::findOrFail($id);
             if ($req->hasFile('photo')) {
                 if ($findByID->photo && file_exists(storage_path('app/public/' . $findByID->photo))) {
                     unlink(storage_path('app/public/' . $findByID->photo));
                 }
             }
 
-            $photoPath = $req->file('photo')->store('barcode', 'public');
+            $photoPath = $req->file('photo')->store('logo', 'public');
             $findByID->update([
                 'photo' => $photoPath
             ]);
 
-            return redirect()->route('a.barcode.index');
+            return redirect()->route('a.logo.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }

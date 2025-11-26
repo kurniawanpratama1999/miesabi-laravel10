@@ -59,6 +59,6 @@ class OrderController extends Controller
             'order_status' => 7
         ]);
 
-        return redirect()->route('orders.index');
+        return redirect()->route('u.orders.index');
     }
 }

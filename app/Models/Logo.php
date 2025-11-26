@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Barcode extends Model
+class Logo extends Model
 {
     protected $fillable = [
         'photo',

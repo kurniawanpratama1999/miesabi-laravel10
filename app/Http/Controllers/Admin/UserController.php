@@ -49,7 +49,7 @@ class UserController extends Controller
             $validate['password'] = Hash::make($validate['password']);
 
             User::create($validate);
-            return redirect()->route('users.index');
+            return redirect()->route('a.users.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }
@@ -67,25 +67,22 @@ class UserController extends Controller
                 'password' => ['nullable', 'min:6'],
                 'password_confirmation' => ['nullable', 'same:password'],
             ]);
-            
+
             $findByID = User::findOrFail($id);
             if (empty($validate['password']) || $validate['password'] == null) {
                 unset($validate['password'], $validate['password_confirmation']);
             }
-            
+
             unset($validate['password_confirmation']);
-            
+
             $validate['password'] = Hash::make($validate['password']);
             $findByID->update($validate);
 
-            return redirect()->route('users.index');
+            return redirect()->route('a.users.index');
         } catch (\Throwable $th) {
             return back()->withInput();
         }
     }
 
-    public function destroy(int $id)
-    {
-
-    }
+    public function destroy(int $id) {}
 }

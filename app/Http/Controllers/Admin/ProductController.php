@@ -81,7 +81,7 @@ class ProductController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('products.index');
+            return redirect()->route('a.products.index');
         } catch (\Throwable $th) {
             DB::rollback();
             return back()->withInput();
@@ -128,7 +128,7 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('products.index');
+            return redirect()->route('a.products.index');
         } catch (\Throwable $th) {
             DB::rollback();
             return back()->withInput();
@@ -138,6 +138,6 @@ class ProductController extends Controller
     public function destroy(int $id)
     {
         Product::destroy($id);
-        return redirect()->route('products.index');
+        return redirect()->route('a.products.index');
     }
 }

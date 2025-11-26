@@ -9,31 +9,38 @@
       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-        <li class="nav-item">
-          <a class="nav-link {{ Route::is('menu.index') ? 'active' : '' }}" href="{{ route('menu.index') }}">Dashboard</a>
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 gap-5">
+        <li>
+            <x-navbar-current-url bootstrapIcon="bi-house" :url="route('u.menu.index')" label="Dashboard"/>
         </li>
-        <li class="nav-item">
-          <a class="nav-link {{ Route::is('menu.index') ? 'active' : '' }}" href="{{ route('menu.index') }}">Menu</a>
+        <li class="d-flex flex-column align-items-center justify-content-center">
+            <i class="text-white bi bi-house fs-4"></i>
+            <a style="font-size: .8rem" class="nav-link text-white" href="{{ route('u.menu.index') }}">Menu</a>
         </li>
         @if(Auth::check())
-          <li id="cart" class="nav-item d-flex d-none">
-            <button onclick="goToCart()" class="nav-link text-white">Keranjang</button>
+          <li id="cart" class="flex-column align-items-center justify-content-center d fs-4 d-none">
+
+            <button onclick="goToCart()">
+                <i class="text-white bi bi-cart3"></i>
+                <span style="font-size: .8rem" class="nav-link text-white">Keranjang</span>
+            </button>
             <span style="height: 3ch; width: 3ch;" class="d-block bg-white rounded-circle d-flex align-items-center justify-content-center">0</span>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link {{ Route::is('orders.index') ? 'fw-bold' : '' }}" href="{{ route('orders.index') }}">Pesanan</a>
-          </li>
-        @endif
-        <li class="nav-item">
-          <a class="nav-link " href="{{ route('menu.index') }}">Ulasan</a>
+          <li class="d-flex flex-column align-items-center justify-content-center">
+            <i class="text-white bi bi-journal-text fs-4"></i>
+            <a style="font-size: .8rem" class="nav-link text-white" href="{{ route('u.orders.index') }}">Pesanan</a>
         </li>
-        <li class="nav-item">
+        @endif
+        <li class="d-flex flex-column align-items-center justify-content-center">
+            <i class="text-white bi bi-chat-right-quote fs-4"></i>
+          <a style="font-size: .8rem" class="nav-link text-white" href="{{ route('u.reviews.index') }}">Ulasan</a>
+        </li>
+        <li class="d-flex flex-column align-items-center justify-content-center">
           <form action="{{ route('logout') }}" method="post">
             @csrf
             @method('DELETE')
-            <button type="submit" class="nav-link text-white">Logout</button>
+            <button type="submit" style="font-size: .8rem" class="nav-link text-white text-white">Logout</button>
           </form>
         </li>
       </ul>

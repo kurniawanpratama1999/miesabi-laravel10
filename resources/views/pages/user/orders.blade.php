@@ -42,7 +42,7 @@
                                 <div class="d-flex flex-column gap-2 text-center">
                                     <span class="badge bg-danger">Belum Lunas</span>
                                     @if($order->payment_with == 2)
-                                    <a href="{{ route('scanqr.show', $order->id) }}" class="badge bg-primary">Bayar</a>
+                                    <a href="{{ route('u.scanqr.show', $order->id) }}" class="badge bg-primary">Bayar</a>
                                     @endif
                                 </div>
                                 @break
@@ -71,7 +71,7 @@
                             @case(5)
                                 <div class="d-flex flex-column gap-1">
                                     <span class="badge bg-secondary">Dalam Pengiriman / Siap Diambil</span>
-                                    <form action="{{ route('orders.update', $order->id) }}" method="POST">
+                                    <form action="{{ route('u.orders.update', $order->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="badge bg-success">Diterima</button>
@@ -81,7 +81,7 @@
                             @case(6)
                                 <div class="d-flex flex-column gap-1">
                                     <span class="badge bg-secondary">Pesanan Sampai</span>
-                                    <form action="{{ route('orders.update', $order->id) }}" method="POST">
+                                    <form action="{{ route('u.orders.update', $order->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="badge bg-success">Diterima</button>
@@ -97,7 +97,7 @@
                     <td class="text-nowrap">{{ $order->created_at }}</td>
 
                     <td>
-                        <a href="/u/details/{{ $order->id }}"
+                        <a href="{{ route('u.details.show') }}"
                            class="btn btn-sm btn-outline-primary">
                             Detail
                         </a>

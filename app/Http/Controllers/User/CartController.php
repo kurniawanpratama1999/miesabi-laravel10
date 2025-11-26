@@ -13,7 +13,7 @@ class CartController extends Controller
     {
         $chosenProducts = session()->get('menuController.menuToCart');
         if (!$chosenProducts) {
-            return redirect()->route('menu.index');
+            return redirect()->route('u.menu.index');
         }
 
         $getProducts = [];
@@ -35,9 +35,9 @@ class CartController extends Controller
     {
         // UNTUK HANDLE CLICK CHECKOUT
         $payloadCartToCheckout = $req->input('payloadCartToCheckout');
-        
+
         session()->put(['cartController.cartToCheckout' => $payloadCartToCheckout]);
 
-        return response()->json(['success' => true, 'redirect' => route('checkout.index')]);
+        return response()->json(['success' => true, 'redirect' => route('u.checkout.index')]);
     }
 }
