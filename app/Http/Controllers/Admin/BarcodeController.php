@@ -13,7 +13,7 @@ class BarcodeController extends Controller
     {
         $data = Barcode::first();
 
-        return view('pages.admin.barcode.CreateReadUpdateDelete', compact("data"));
+        return view('pages.admin.barcode', compact("data"));
     }
 
     public function edit(int $id)
@@ -22,7 +22,7 @@ class BarcodeController extends Controller
         $barcode = Barcode::findOrFail($id);
 
         return view(
-            'pages.admin.barcode.CreateReadUpdateDelete',
+            'pages.admin.barcode',
             compact("datas", 'barcode')
         );
     }

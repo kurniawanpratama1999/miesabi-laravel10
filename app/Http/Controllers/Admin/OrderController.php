@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -52,13 +50,23 @@ class OrderController extends Controller
             )
             ->get();
 
-        return view('pages.admin.order.ReadDelete', compact('orders'));
+        return view('pages.admin.orders', compact('orders'));
     }
     public function updatePaymentStatus(int $order_id)
     {
         $orderById = Order::findOrFail($order_id);
         $orderById->update([
-            'payment_status' => 2
+            'payment_status' => 3
+        ]);
+
+        return redirect()->route('a.orders.index');
+    }
+
+    public function rollbackPaymentStatus(int $order_id)
+    {
+        $orderById = Order::findOrFail($order_id);
+        $orderById->update([
+            'payment_status' => 1
         ]);
 
         return redirect()->route('a.orders.index');

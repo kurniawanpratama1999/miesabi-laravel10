@@ -16,7 +16,7 @@ class UserController extends Controller
 
         $roles = ['admin', 'user'];
 
-        return view('pages.admin.user.CreateReadUpdateDelete', compact("datas", 'roles'));
+        return view('pages.admin.users', compact("datas", 'roles'));
     }
 
     public function edit(int $id)
@@ -27,7 +27,7 @@ class UserController extends Controller
 
 
         return view(
-            'pages.admin.user.CreateReadUpdateDelete',
+            'pages.admin.users',
             compact("datas", 'roles', 'user')
         );
     }

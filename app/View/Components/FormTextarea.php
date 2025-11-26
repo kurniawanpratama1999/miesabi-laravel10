@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class NavbarCurrentUrl extends Component
+class FormTextarea extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class NavbarCurrentUrl extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.navbar-current-url');
+        return view('components.form-textarea');
     }
 }

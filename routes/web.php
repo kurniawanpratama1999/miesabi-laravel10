@@ -27,9 +27,13 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('variants', VariantController::class);
             Route::resource('products', ProductController::class);
 
-            Route::put('/orders/payment/{order_id}', [AdminOrderController::class, 'updatePaymentStatus'])
+            Route::put('/orders/payment/{order_id}/next', [AdminOrderController::class, 'updatePaymentStatus'])
                 ->whereNumber('order_id')
-                ->name('orders.payment');
+                ->name('orders.payment.next');
+
+            Route::put('/orders/payment/{order_id}/prev', [AdminOrderController::class, 'rollbackPaymentStatus'])
+                ->whereNumber('order_id')
+                ->name('orders.payment.prev');
 
             Route::put('/orders/status/{order_id}/next', [AdminOrderController::class, 'updateOrderStatus'])
                 ->whereNumber('order_id')

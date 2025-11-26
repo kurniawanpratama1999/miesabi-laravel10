@@ -1,10 +1,14 @@
+@props([
+    'title' => 'MIESABI'
+])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>@yield('title', 'MIESABI')</title>
+        <title>{{ $title }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
             input[type=number]::-webkit-outer-spin-button,
@@ -19,11 +23,6 @@
         @stack('styles')
     </head>
     <body>
-        <x-navbar-user/>
-        <main style="min-height: 100dvh; padding-top: 3.5rem" class="bg-yellow-100">
-            @yield('section')
-        </main>
-
-        @stack('scripts')
+        {{ $slot }}
     </body>
 </html>

@@ -13,7 +13,7 @@ class LogoController extends Controller
     {
         $data = Logo::first();
 
-        return view('pages.admin.logo.CreateReadUpdateDelete', compact("data"));
+        return view('pages.admin.logo', compact("data"));
     }
 
     public function edit(int $id)
@@ -22,7 +22,7 @@ class LogoController extends Controller
         $logo = Logo::findOrFail($id);
 
         return view(
-            'pages.admin.logo.CreateReadUpdateDelete',
+            'pages.admin.logo',
             compact("datas", 'logo')
         );
     }

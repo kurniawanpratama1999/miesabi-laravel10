@@ -1,4 +1,4 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'Menu | Mie Sabi')
 

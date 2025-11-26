@@ -24,15 +24,15 @@ class LoginController extends Controller
             $user = Auth::user();
             
             if ($user->role === 'admin') {
-                return redirect()->route('products.index');
+                return redirect()->route('a.products.index');
             }
 
             if ($user->role === 'user') {
-                return redirect()->route('menu.index');
+                return redirect()->route('u.menu.index');
             }
         }
 
-        return back()->withErrors(['username' => 'Username atau Password Salah'])->onlyInput('username');
+        return back()->withErrors(['email' => 'Email atau Password Salah', 'password' => 'Email atau Password Salah'])->onlyInput('email');
     }
 
     public function logout(Request $req)

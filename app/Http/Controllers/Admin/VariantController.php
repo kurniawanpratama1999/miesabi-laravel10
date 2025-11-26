@@ -20,7 +20,7 @@ class VariantController extends Controller
 
         $products = Product::all();
 
-        return view('pages.admin.variant.CreateReadUpdateDelete', compact("datas", 'products'));
+        return view('pages.admin.variants', compact("datas", 'products'));
     }
 
     public function edit(int $id)
@@ -36,7 +36,7 @@ class VariantController extends Controller
         $variant = Variant::findOrFail($id);
 
         return view(
-            'pages.admin.variant.CreateReadUpdateDelete',
+            'pages.admin.variants',
             compact("datas", 'variant', 'products')
         );
     }
@@ -65,6 +65,7 @@ class VariantController extends Controller
                 'product_id' => ['required', 'integer'],
                 'price' => ['required', 'numeric']
             ]);
+            
             $findByID = Variant::findOrFail($id);
             $findByID->update($validate);
 

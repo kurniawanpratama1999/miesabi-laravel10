@@ -30,6 +30,7 @@ class OrderDetailController extends Controller
                 'o.payment_status',
                 'o.order_status',
                 'o.address',
+                'o.phone',
                 'o.created_at',
                 'd.id as delivery_id',
                 'd.name as delivery_name',
@@ -46,6 +47,7 @@ class OrderDetailController extends Controller
                 'o.payment_status',
                 'o.order_status',
                 'o.address',
+                'o.phone',
                 'o.created_at',
                 'd.id',
                 'd.name',
@@ -54,6 +56,6 @@ class OrderDetailController extends Controller
             ->first();
 
         
-        return view('pages.admin.order_detail.Read', compact('orderDetails', 'order'));
+        return view('pages.admin.orderDetails', compact('orderDetails', 'order'));
     }
 }

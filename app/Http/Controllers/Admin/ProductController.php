@@ -10,16 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /* =======================================================================================================
-    Kolom yang harus di isi adalah :
-        - name -> maksudnya nama dari kategori produk seperti "Makanan", "Minuman", "Snack", "Desert", "dll"
-    ======================================================================================================== */
-
     public function index()
     {
-        // MENAMPILKAN DAFTAR (read) Kategori Produk dari DB_Table "categories"
-
-        // ambil semua data
         $datas = DB::table('products')
             ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
             ->select('products.id', 'products.photo', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
@@ -28,16 +20,11 @@ class ProductController extends Controller
 
         $categories = Category::all();
 
-        // kembalikan function untuk render halaman 'display' dan lempar variable $datas
-        // agar $datas bisa digunakan pada halaman kategori
-        return view('pages.admin.product.CreateReadUpdateDelete', compact("datas", 'categories'));
+        return view('pages.admin.products', compact("datas", 'categories'));
     }
 
     public function edit(int $id)
     {
-        // MENAMPILKAN DAFTAR (read) Kategori Produk dari DB_Table "categories"
-
-        // ambil semua data
         $datas = DB::table('products')
             ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
             ->select('products.id', 'products.photo', 'products.name', 'categories.name as category_name', 'products.price', 'products.stock')
@@ -46,20 +33,16 @@ class ProductController extends Controller
 
         $categories = Category::all();
 
-        // ambil data berdasarkan ID
         $product = Product::findOrFail($id);
 
-        // kembalikan function untuk render halaman 'display' dan lempar variable $datas
-        // agar $datas bisa digunakan pada halaman kategori
         return view(
-            'pages.admin.product.CreateReadUpdateDelete',
+            'pages.admin.products',
             compact("datas", 'product', 'categories')
         );
     }
 
     public function store(Request $req)
     {
-        // LOGIKA dan PERINTAH untuk MENAMBAH (Create) data ke DB_table "categories"
         try {
             DB::beginTransaction();
             $validate = $req->validate([
