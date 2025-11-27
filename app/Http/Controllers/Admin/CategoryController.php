@@ -58,5 +58,7 @@ class CategoryController extends Controller
 
     public function destroy(int $id)
     {
+        Category::destroy($id);
+        return redirect()->route('a.categories.index');
     }
 }

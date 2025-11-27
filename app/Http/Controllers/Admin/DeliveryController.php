@@ -60,5 +60,7 @@ class DeliveryController extends Controller
 
     public function destroy(int $id)
     {
+        DeliveryMethod::destroy($id);
+        return redirect()->route('a.deliveries.index');
     }
 }

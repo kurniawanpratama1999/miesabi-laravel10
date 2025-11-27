@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -98,6 +99,12 @@ class OrderController extends Controller
             'order_status' => $orderById->order_status - 1
         ]);
 
+        return redirect()->route('a.orders.index');
+    }
+
+    public function destroy (int $id) {
+        OrderDetail::where('order_id', '=', $id);
+        Order::destroy($id);
         return redirect()->route('a.orders.index');
     }
 }

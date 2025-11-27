@@ -65,7 +65,7 @@ class VariantController extends Controller
                 'product_id' => ['required', 'integer'],
                 'price' => ['required', 'numeric']
             ]);
-            
+
             $findByID = Variant::findOrFail($id);
             $findByID->update($validate);
 
@@ -75,5 +75,9 @@ class VariantController extends Controller
         }
     }
 
-    public function destroy(int $id) {}
+    public function destroy(int $id)
+    {
+        Variant::destroy($id);
+        return redirect()->route('a.variants.index');
+    }
 }

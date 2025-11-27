@@ -35,6 +35,8 @@ class ReviewController extends Controller
                 DB::raw('SUM((COALESCE(v.price, 0) + p.price) * od.quantity) + d.price as total_price')
             )
             ->where('o.user_id', '=', Auth::user()->id)
+            ->where('o.order_status', '=', 7)
+
             ->groupBy(
                 'o.id',
                 'o.code',
@@ -64,15 +66,19 @@ class ReviewController extends Controller
     }
     public function update(Request $req, int $id)
     {
-        $order = Order::findOrFail($id);
+        try {
+            $order = Order::findOrFail($id);
 
-        $validate = $req->validate([
-            'star' => ['required', 'integer', 'between:1,5'],
-            'comment' => ['required', 'string', 'max:500']
-        ]);
+            $validate = $req->validate([
+                'stars' => ['nullable'],
+                'comment' => ['nullable']
+            ]);
 
-        $order->update($validate);
+            $order->update($validate);
 
-        return redirect()->route('u.orders.index');
+            return redirect()->route('u.orders.index');
+        } catch (\Throwable $th) {
+            return back()->withInput();
+        }
     }
 }

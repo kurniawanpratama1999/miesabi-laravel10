@@ -16,7 +16,7 @@ return new class extends Migration
 
             $col->foreignId('order_id')
                 ->constrained('orders')
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
 
             $col->foreignId('product_id')
                 ->nullable()
@@ -31,7 +31,7 @@ return new class extends Migration
             $col->string('merge')->unique();
 
             $col->integer('quantity');
-                
+
             $col->timestamps();
         });
     }

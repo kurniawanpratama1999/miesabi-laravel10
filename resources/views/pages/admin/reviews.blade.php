@@ -4,8 +4,7 @@
 
 @section('content')
     <div class="container">
-        <section>
-            <h4 class="mb-3">Produk Selesai</h4>
+        <section class="pt-3">
             @foreach ($orders as $order)
                 @php
                     switch($order->payment_with) {

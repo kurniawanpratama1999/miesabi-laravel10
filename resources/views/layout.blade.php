@@ -26,8 +26,15 @@
                     <span id="Reviews-label">Reviews</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button class="nav-link">Logout</button>
+                </form>
+            </li>
             @endif
-            
+
         @if (Auth::check() && Auth::user()->role === 'admin')
             <li id="Orders-wraper" class="nav-item">
                 <a id="Orders-link" href="{{ route('a.orders.index') }}" class="nav-link {{ Route::is('a.orders.index') ? 'active' : '' }}">
@@ -77,7 +84,7 @@
                 <a id="Register-link" href="{{ route('register') }}" class="nav-link text-light {{ Route::is('a.users.index') ? 'active' : '' }}">
                     <span id="Register-label">Register</span>
                 </a>
-            </li>            
+            </li>
         @endif
     </x-navbar>
 
@@ -85,5 +92,5 @@
         @yield('content')
         @stack('scripts')
     </x-main>
-    
+
 </x-html>

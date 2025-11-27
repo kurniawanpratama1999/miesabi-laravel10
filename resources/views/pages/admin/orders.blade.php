@@ -145,11 +145,19 @@
 
                                 <td>
                                     <div class="d-flex flex-column gap-2">
-                                        <form action="{{ route('a.orders.status.prev', $order->id) }}" method="post">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-sm btn-danger">Prev</button>
-                                        </form>
+                                        @if ($order->order_status <= 1)
+                                            <form action="{{ route('a.orders.destroy', $order->id) }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">Batalkan Pesanan</button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('a.orders.status.prev', $order->id) }}" method="post">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="btn btn-sm btn-danger">Prev</button>
+                                            </form>
+                                        @endif
                                         <form action="{{ route('a.orders.status.next', $order->id) }}" method="post">
                                             @csrf
                                             @method('PUT')

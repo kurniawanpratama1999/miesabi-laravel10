@@ -5,11 +5,11 @@
 @section('content')
         <div class="container">
             <section class="pt-3 row px-3">
-                <x-form-modal method="{{ isset($variant) ? 'PUT' : 'POST' }}" title="{{ isset($product) ? 'Sunting Produk' : 'Tambah Produk' }}" action="{{ isset($product) ? route('a.products.update', $product->id) : route('a.products.store') }}">
+                <x-form-modal method="{{ isset($product) ? 'PUT' : 'POST' }}" title="{{ isset($product) ? 'Sunting Produk' : 'Tambah Produk' }}" action="{{ isset($product) ? route('a.products.update', $product->id) : route('a.products.store') }}">
                     <div class="col-12">
                         <x-form-input idprop="photo" labelprop="Foto Produk" typeprop="file" />
                     </div>
-                    
+
                     <div class="col-12">
                         <x-form-select idprop="category_id" labelprop="Kategori Produk" :model="$product ?? null" :options="$categories"/>
                     </div>
@@ -86,7 +86,7 @@
                                                 <div class="d-flex gap-2">
                                                     <a href="{{ route('a.products.edit', $data->id) }}" class="btn btn-sm btn-light border"><i class="bi bi-pencil"></i></a>
                                                     <form method="POST" action="{{ route("a.products.destroy", $data->id) }}" class="d-inline ms-2">
-                                                        @csrf   
+                                                        @csrf
                                                         @method('DELETE')
                                                         <button class="btn btn-sm btn-light border"><i class="bi bi-trash"></i></button>
                                                     </form>
@@ -114,8 +114,6 @@
             myModalEl.addEventListener('hidden.bs.modal', event => {
                 location.href = "{{ route('a.products.index') }}"
             })
-
-
         })
     </script>
     @endpush

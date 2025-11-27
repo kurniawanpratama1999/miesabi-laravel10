@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function index () {
+    public function index()
+    {
         $orders = DB::table('orders as o')
             ->leftJoin('delivery_methods as d', 'd.id', '=', 'o.delivery_id')
             ->leftJoin('users as u', 'u.id', '=', 'o.user_id')
@@ -33,6 +34,7 @@ class OrderController extends Controller
                 DB::raw('SUM((COALESCE(v.price, 0) + p.price) * od.quantity) as subtotal'),
                 DB::raw('SUM((COALESCE(v.price, 0) + p.price) * od.quantity) + d.price as total_price')
             )->where('o.user_id', '=', Auth::user()->id)
+
             ->groupBy(
                 'o.id',
                 'o.code',
@@ -53,7 +55,8 @@ class OrderController extends Controller
         return view('pages.user.orders', compact('orders'));
     }
 
-    public function update (int $id) {
+    public function update(int $id)
+    {
         $order = Order::findOrFail($id);
         $order->update([
             'order_status' => 7
