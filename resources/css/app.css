@@ -433,3 +433,47 @@ form.w-50 {
 .card {
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
+
+@media (min-width: 992px) {
+    /* Modal berubah menjadi sidebar */
+    #exampleModal.modal {
+        --bs-modal-zindex: 1;
+        --bs-modal-width: 100%;
+        --bs-modal-padding: 1rem;
+        --bs-modal-margin: 0;
+        --bs-modal-bg: tranparent;
+
+        position: static !important;
+        display: block !important;
+        opacity: 1 !important;
+        width: 33.333%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: var(--yellow-300);
+        padding-right: 0 !important;
+    }
+
+    /* Fix selector! */
+    #exampleModal .modal-dialog {
+        margin: 0 !important;
+        height: calc(100dvh - 4rem);
+        max-width: none !important;
+        padding: 0 !important;
+        padding-top: 2rem !important;
+    }
+
+    #exampleModal .modal-content {
+        border-radius: 0;
+        border: 0 !important;
+    }
+
+    /* Hilangkan backdrop di desktop */
+    .modal-backdrop.show {
+        display: none !important;
+    }
+
+    /* tombol checkout tidak muncul di desktop */
+    .btn-checkout-mobile {
+        display: none !important;
+    }
+}

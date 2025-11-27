@@ -5,7 +5,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <section style="height: calc(100dvh - 3.5rem)" id="menus" class="col-8 overflow-y-auto p-3">
+            <section style="height: calc(100dvh - 4rem)" id="menus" class="col-12 col-lg-8 overflow-y-auto p-3">
                 <h5>Pesanan Kamu</h5>
                 <div class="row">
                     @foreach ($getProducts as $product)
@@ -51,58 +51,74 @@
                     @endforeach
                 </div>
             </section>
-            <section id="details" style="height: calc(100dvh - 3.5rem)" class="col-4 overflow-y-auto bg-yellow-300 pb-4">
-                <h5 class="d-block text-center fw-bold fs-4 py-3">Pilih Metode Pengambilan Pesanan</h5>
-                <div class="row">
-                    <div class="col-6">
-                        <h5>Pengantaran</h5>
-                        @foreach ($getDeliveryMethods as $delivery)
-                        <div id="deliveryChoose-{{ $delivery->id }}" onclick="handleClickDelivery(event, {{ $delivery->id }})" style="cursor: pointer" class="text-center rounded p-3 mb-3 {{ $delivery->id == 1 ? 'bg-yellow-400' : 'bg-yellow-200' }}">
-                            @switch($delivery->id)
-                                @case(1) <i class="bi bi-shop fs-3"></i> @break
-                                @case(2) <i class="bi bi-truck-front fs-3"></i> @break
-                            @endswitch
-                            <span class="d-block text-center">{{ $delivery->name }}</span>
-                        </div>
-                        @endforeach
-                    </div>
 
-                    <div class="col-6">
-                        <h5>Pembayaran</h5>
-                        @foreach ([1, 2] as $payment)
-                        <div id="paymentChoose-{{ $payment }}" onclick="handleClickPayment(event, '{{ $payment }}')" style="cursor: pointer" class="text-center rounded p-3 mb-3 {{ $payment == 1 ? 'bg-yellow-400' : 'bg-yellow-200' }}">
-                            @switch($payment)
-                                @case(1) <i class="bi bi-cash-coin fs-3"></i> @break
-                                @case(2) <i class="bi bi-qr-code-scan fs-3"></i> @break
-                            @endswitch
-                            <span class="d-block text-center">
-                                @switch($payment)
-                                    @case(1) Tunai @break
-                                    @case(2) QRIS @break
-                                @endswitch
-                            </span>
-                        </div>
-                        @endforeach
+            <button type="button" style="bottom: 1rem; right: 1rem;width: fit-content;" class="btn btn-warning position-fixed d-lg-none" data-bs-toggle="modal" data-bs-target="#exampleModal">Checkout</button>
+
+                    <!-- Modal -->
+            <div class="modal-right modal fade .modal-right" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Metode Pengambilan Pesanan</h1>
+                        <button type="button" class="btn-close d-lg-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{--  --}}
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>Pengantaran</h5>
+                                    @foreach ($getDeliveryMethods as $delivery)
+                                    <div id="deliveryChoose-{{ $delivery->id }}" onclick="handleClickDelivery(event, {{ $delivery->id }})" style="cursor: pointer" class="text-center rounded p-3 mb-3 {{ $delivery->id == 1 ? 'bg-yellow-400' : 'bg-yellow-200' }}">
+                                        @switch($delivery->id)
+                                            @case(1) <i class="bi bi-shop fs-3"></i> @break
+                                            @case(2) <i class="bi bi-truck-front fs-3"></i> @break
+                                        @endswitch
+                                        <span class="d-block text-center">{{ $delivery->name }}</span>
+                                    </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="col-6">
+                                    <h5>Pembayaran</h5>
+                                    @foreach ([1, 2] as $payment)
+                                    <div id="paymentChoose-{{ $payment }}" onclick="handleClickPayment(event, '{{ $payment }}')" style="cursor: pointer" class="text-center rounded p-3 mb-3 {{ $payment == 1 ? 'bg-yellow-400' : 'bg-yellow-200' }}">
+                                        @switch($payment)
+                                            @case(1) <i class="bi bi-cash-coin fs-3"></i> @break
+                                            @case(2) <i class="bi bi-qr-code-scan fs-3"></i> @break
+                                        @endswitch
+                                        <span class="d-block text-center">
+                                            @switch($payment)
+                                                @case(1) Tunai @break
+                                                @case(2) QRIS @break
+                                            @endswitch
+                                        </span>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <form class="row g-3">
+                                <div class="col-md-12">
+                                    <label for="note" class="form-label text-yellow-900">Note</label>
+                                    <textarea type="note" class="form-control" id="note" name="note" style="height: 100px"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="address" class="form-label text-yellow-900">Address</label>
+                                    <textarea type="address" class="form-control" id="address" name="address" style="height: 100px"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="phone" class="form-label text-yellow-900">Phone</label>
+                                    <input type="phone" class="form-control" id="phone" name="phone">
+                                </div>
+
+                                <button type="button" onclick="checkout()" style="width: fit-content" class="bg-yellow-600 border-0 text-white rounded-1 d-block ms-auto px-4 py-1 me-2">Chekout</button>
+                            </form>
+                        {{--  --}}
+                    </div>
                     </div>
                 </div>
+            </div>
 
-                <form class="row g-3">
-                    <div class="col-md-12">
-                        <label for="note" class="form-label text-yellow-900">Note</label>
-                        <textarea type="note" class="form-control" id="note" name="note" style="height: 100px"></textarea>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="address" class="form-label text-yellow-900">Address</label>
-                        <textarea type="address" class="form-control" id="address" name="address" style="height: 100px"></textarea>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="phone" class="form-label text-yellow-900">Phone</label>
-                        <input type="phone" class="form-control" id="phone" name="phone">
-                    </div>
 
-                    <button type="button" onclick="checkout()" style="width: fit-content" class="bg-yellow-600 border-0 text-white rounded-1 d-block ms-auto px-4 py-1 me-2">Chekout</button>
-                </form>
-            </section>
         </div>
     </div>
 @endsection
