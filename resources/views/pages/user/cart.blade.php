@@ -295,7 +295,7 @@
         const address = document.getElementById('address').value
         const phone = document.getElementById('phone').value
 
-        if (note.value == "" && address.value == "" && phone.value == "") {
+        if (!note || !address || !phone) {
             return
         }
 
