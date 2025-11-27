@@ -1,8 +1,8 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'Pesanan diterima | Mie Sabi')
 
-@section('section')
+@section('content')
     <main style="min-height: calc(100dvh - 3.5rem);" class="overflow-hidden container-fluid mx-auto bg-young-brown">
         <div class="container mx-auto py-4">
             <h4>Status Pesanan</h4>

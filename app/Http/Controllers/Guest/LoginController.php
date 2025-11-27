@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Models\Logo;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -10,7 +11,8 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     public function index () {
-        return view('pages.guest.login');
+        $logo = Logo::first();
+        return view('pages.guest.login', compact('logo'));
     }
 
     public function login (Request $req) {

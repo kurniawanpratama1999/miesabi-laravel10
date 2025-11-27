@@ -1,5 +1,14 @@
+@php
+  $logo = DB::table('logos')->first();
+@endphp
+
 <nav style="height: 4rem;" class="navbar navbar-dark navbar-expand-lg bg-yellow-600 fixed-top px-3">
-  <a class="navbar-brand" href="#">Mie Sabi</a>
+  <a class="nav-link text-white" href="/" class="d-flex align-items-center gap-2 p-0 m-0">
+    @if(isset($logo, $logo->photo))
+        <img src="{{ asset('storage/' . $logo->photo) }}" style="width: 3.5rem;" class="object-fit-contain p-0 m-0">
+    @endif
+    <span>MieSabi</span>
+  </a>
   <button class="d-lg-none btn-sm bg-transparent border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>

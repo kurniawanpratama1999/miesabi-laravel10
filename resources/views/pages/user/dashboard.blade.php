@@ -1,7 +1,7 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'Dashboard | Mie Sabi')
 
-@section('section')
+@section('content')
     ini dashboard user
 @endsection

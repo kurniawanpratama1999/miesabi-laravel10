@@ -2,7 +2,7 @@
 
 @section('title', 'Menu | Mie Sabi')
 
-@section('section')
+@section('content')
     <section class="container-fluid p-5">
         <div class="row">
             @foreach ($dbTableProducts as $product)
@@ -44,7 +44,7 @@
         const arrCart = {value: []}
 
         const changeCartPopup = () => {
-            const getCartElement = document.getElementById('cart')
+            const getCartElement = document.getElementById('Carts-wraper')
             const countingQuantity = arrCart.value.reduce((a, b) => a + b.quantity, 0)
             if(countingQuantity) {
                 // tampilkan
@@ -54,7 +54,7 @@
                 getCartElement.classList.add('d-none');
             }
 
-            getCartElement.querySelector('span').innerHTML = arrCart.value.reduce((a, b) => a + b.quantity, 0)
+            getCartElement.querySelector('span#Carts-ballon').innerHTML = arrCart.value.reduce((a, b) => a + b.quantity, 0)
         }
 
         function handleProductCounter(operator, id){

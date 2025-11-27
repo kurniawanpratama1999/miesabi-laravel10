@@ -1,8 +1,8 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'Cart | Mie Sabi')
 
-@section('section')
+@section('content')
     <div class="container-fluid">
         <div class="row">
             <section style="height: calc(100dvh - 3.5rem)" id="menus" class="col-8 overflow-y-auto p-3">
@@ -51,7 +51,7 @@
                     @endforeach
                 </div>
             </section>
-            <section id="details" style="height: calc(100dvh - 3.5rem)" class="col-4 overflow-y-auto bg-yellow-300">
+            <section id="details" style="height: calc(100dvh - 3.5rem)" class="col-4 overflow-y-auto bg-yellow-300 pb-4">
                 <h5 class="d-block text-center fw-bold fs-4 py-3">Pilih Metode Pengambilan Pesanan</h5>
                 <div class="row">
                     <div class="col-6">
@@ -275,14 +275,22 @@
 
 
     async function checkout () {
+        const note = document.getElementById('note').value
+        const address = document.getElementById('address').value
+        const phone = document.getElementById('phone').value
+
+        if (note.value == "" && address.value == "" && phone.value == "") {
+            return
+        }
+
         let copygetProducts = [...getProducts];
         let order_details = flattenProducts(copygetProducts)
         let orders = {
             delivery_id: delivery_id.value,
             payment_with: payment_method.value,
-            note: "ABC",
-            address: "ABC",
-            phone: "ABC"
+            note: note.trim(),
+            address: address.trim(),
+            phone: phone.trim()
         }
 
         const arrCheckout = {

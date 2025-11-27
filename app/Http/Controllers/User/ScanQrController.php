@@ -17,7 +17,7 @@ class ScanQrController extends Controller
         $checkoutPayment = session()->pull("checkoutController.checkoutToPayment");
 
         if (!$checkoutPayment) {
-            return redirect()->route('u.orders.show', Auth::user()->id);
+            return redirect()->route('u.orders.index');
         }
 
         $barcode = Barcode::first();
@@ -50,7 +50,8 @@ class ScanQrController extends Controller
         $order->total_price = $total;
         $order_id = $order->id;
 
-        return view('pages.user.scanqr', compact('total', 'order_id'));
+        $barcode = Barcode::first();
+        return view('pages.user.scanqr', compact('total', 'order_id', 'barcode'));
     }
 
     public function update(Request $req, int $id)

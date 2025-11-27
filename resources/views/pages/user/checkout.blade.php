@@ -1,9 +1,9 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'Pesanan | Mie Sabi')
 
-@section('section')
-        <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.7);" class="mx-auto py-4">
+@section('content')
+        <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.7); min-height: calc(100dvh - 4rem);" class="mx-auto py-4 px-3">
             <h4 class="text-center mb-4">Rincian Harga</h4>
             <div>
                 <div class="d-flex flex-column gap-2">
@@ -84,6 +84,7 @@
             }
         })
         const res = await api.json();
+        console.log(res)
         if (res.success) {
             location.href = res.redirect
         }

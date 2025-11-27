@@ -1,8 +1,8 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'Riwayat Pesanan | Mie Sabi')
 
-@section('section')
+@section('content')
 <main class="container py-4">
     <h4 class="mb-4">Riwayat Pesanan</h4>
 
@@ -97,7 +97,7 @@
                     <td class="text-nowrap">{{ $order->created_at }}</td>
 
                     <td>
-                        <a href="{{ route('u.details.show') }}"
+                        <a href="{{ route('u.details.show', $order->id) }}"
                            class="btn btn-sm btn-outline-primary">
                             Detail
                         </a>

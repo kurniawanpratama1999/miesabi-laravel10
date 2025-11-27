@@ -1,8 +1,8 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'Ulasan | Mie Sabi')
 
-@section('section')
+@section('content')
     <div class="container">
         @if (isset($order))
             <section class="pt-3 row px-3">

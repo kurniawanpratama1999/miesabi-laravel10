@@ -1,12 +1,14 @@
-@extends('layouts.user')
+@extends('layout')
 
 @section('title', 'ScanQr | Mie Sabi')
 
-@section('section')
+@section('content')
         <section style="max-width: 450px;background-color: rgb(255, 255, 255,0.2);" class="mx-auto py-4">
             <h3 class="text-center mb-3">QR SCAN</h3>
             <div style="max-width: 300px; min-width: 300px; max-height: 300px; min-height: 300px;" class="border mx-auto">
-                <img src="{{ $barcode->photo }}" alt="">
+                @if(isset($barcode, $barcode->photo))
+                <img src="{{ asset('storage/'. $barcode->photo) }}" class="w-100 h-100 object-fit-contain">
+                @endif
             </div>
 
 
@@ -26,9 +28,3 @@
             </form>
         </section>
 @endsection
-
-@pushOnce('scripts')
-    <script>
-
-    </script>
-@endPushOnce
