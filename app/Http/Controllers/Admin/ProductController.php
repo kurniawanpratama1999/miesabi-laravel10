@@ -43,17 +43,21 @@ class ProductController extends Controller
 
     public function store(Request $req)
     {
+        logger()->info('Mulai');
         try {
+            logger()->info('TRY');
             DB::beginTransaction();
             $validate = $req->validate([
-                'photo' => ['required', 'file', 'size:2404', 'mimes:png,jpg'],
+                'photo' => ['required', 'file', 'max:2404', 'mimes:png,jpg'],
                 'name' => ['required', 'string'],
                 'category_id' => ['required', 'integer'],
                 'price' => ['required', 'numeric'],
-                'stock' => ['required', 'nDB::beginTransaction();umeric']
+                'stock' => ['required', 'integer']
             ]);
+            logger()->info('Jalan1');
 
-            $photoPath = $validate['photo']->store('products', 'public');
+            $photoPath = $req->file('photo')->store('products', 'public');
+            logger()->info('Jalan2');
 
             Product::create([
                 'photo' => $photoPath,
@@ -62,10 +66,14 @@ class ProductController extends Controller
                 'price' => $validate['price'],
                 'stock' => $validate['stock']
             ]);
+            logger()->info('Jalan3');
 
             DB::commit();
+            logger()->info('Selesai');
             return redirect()->route('a.products.index');
         } catch (\Throwable $th) {
+            logger()->info('Error');
+            logger()->info($th);
             DB::rollback();
             return back()->withInput();
         }
@@ -80,7 +88,7 @@ class ProductController extends Controller
                 'name' => ['required', 'string'],
                 'category_id' => ['required', 'integer'],
                 'price' => ['required', 'numeric'],
-                'stock' => ['required', 'numeric']
+                'stock' => ['required', 'integer']
             ]);
 
             $findByID = Product::findOrFail($id);

@@ -7,6 +7,7 @@
                     <span id="Products-label">Products</span>
                 </a>
             </li>
+            {{-- START LOGIC --}}
             <li id="Carts-wraper" class="nav-item d-none">
                 <button onclick="goToCart()" id="Carts-link" class="nav-link position-relative {{ Route::is('u.cart.index') ? 'active' : '' }}">
                     <span id="Carts-ballon" style="right: -8px; top: -3px; font-size: .8rem; width: 20px; height: 20px;" class="d-block position-absolute bg-white rounded-circle text-yellow-800 text-center"></span>
@@ -14,6 +15,7 @@
                     <span id="Carts-label">Carts</span>
                 </button>
             </li>
+            {{-- ENDLOGIC --}}
             <li id="Orders-wraper" class="nav-item">
                 <a id="Orders-link" href="{{ route('u.orders.index') }}" class="nav-link {{ Route::is('u.orders.index') ? 'active' : '' }}">
                     <i id="Orders-icon" class="bi bi-journal-text"></i>
