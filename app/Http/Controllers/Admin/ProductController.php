@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -128,6 +129,8 @@ class ProductController extends Controller
 
     public function destroy(int $id)
     {
+        $variant = Variant::where('product_id','=',$id);
+        $variant->delete();
         Product::destroy($id);
         return redirect()->route('a.products.index');
     }
