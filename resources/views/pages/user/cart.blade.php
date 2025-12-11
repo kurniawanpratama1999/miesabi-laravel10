@@ -11,7 +11,9 @@
                     @foreach ($getProducts as $product)
                         <div class="col-6 col-sm-4 col-lg-3 col-xl-2 p-2">
                         <div class="bg-yellow-200">
-                            <div id="p-image" style="aspect-ratio: 1/1;" class="border-bottom"></div>
+                            <div id="p-image" style="aspect-ratio: 1/1;" class="border-bottom">
+                                <img width="100%" src="{{asset('storage/'. $product->photo)}}" alt="">
+                            </div>
                             <div class="p-3">
                                 <div class="d-flex flex-column">
                                     <span id="p-name" class="text-center fw-bold">{{ $product->name }}</span>
@@ -97,17 +99,18 @@
                                 </div>
                             </div>
                             <form class="row g-3">
+                                <p class="text-muted">*Pesanan diantar untuk jarak maks 10km dari tempat miesabi</p>
                                 <div class="col-md-12">
                                     <label for="note" class="form-label text-yellow-900">Note</label>
                                     <textarea type="note" class="form-control" id="note" name="note" style="height: 100px"></textarea>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="addressGroup">
                                     <label for="address" class="form-label text-yellow-900">Address</label>
                                     <textarea type="address" class="form-control" id="address" name="address" style="height: 100px"></textarea>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="phone" class="form-label text-yellow-900">Phone</label>
-                                    <input type="phone" class="form-control" id="phone" name="phone">
+                                    <input type="number" class="form-control" id="phone" name="phone">
                                 </div>
 
                                 <button type="button" onclick="checkout()" style="width: fit-content" class="bg-yellow-600 border-0 text-white rounded-1 d-block ms-auto px-4 py-1 me-2">Chekout</button>
@@ -147,6 +150,17 @@
             }
 
             inputQuantityProductElement.value = product.quantity
+        }
+    }
+
+    function initialModal(){
+        const defaultDelivery = delivery_id.value;
+        const addressGroup = document.getElementById('addressGroup');
+        if(defaultDelivery == 1){
+            addressGroup.style.display = 'none';
+        } else {
+            addressGroup.style.display = 'block';
+
         }
     }
 
@@ -198,7 +212,17 @@
 
     function handleClickDelivery (event, id) {
         delivery_id.value = parseInt(id)
-        const deliveriesElement = document.querySelectorAll('div[id^=deliveryChoose-]')
+        const deliveriesElement = document.querySelectorAll('div[id^=deliveryChoose-]');
+        const addressGroup = document.getElementById('addressGroup');
+        const inputAddress = document.getElementById('address');
+
+        if(id == 1){
+            addressGroup.style.display = 'none';
+            inputAddress.value = '';
+        } else {
+            addressGroup.style.display = 'block';
+
+        }
         deliveriesElement.forEach(d => {
             d.classList.remove('bg-yellow-400')
             d.classList.remove('bg-yellow-200')
@@ -295,14 +319,36 @@
         const address = document.getElementById('address').value
         const phone = document.getElementById('phone').value
 
-        if (!note || !address || !phone) {
-            return
+        const deliveryId = delivery_id.value;
+
+        let isValid = true;
+        let errorMassage = 'Harap isi semua kolom yang diperlukan';
+
+        if(!note.trim() || !phone.trim()) {
+            isValid = false;
+            erroMassage += 'Note dan Phone harus diisi';
+
+        }
+
+        if(deliveryId != 1){
+            if(!address.trim()) {
+                isValid = false;
+                if(errorMassage.length > 33 ) {
+                    errorMassage += ', ';
+                }
+                errorMassage += 'Address';
+            }
+        }
+
+        if(!isValid){
+            alert(errorMassage);
+            return;
         }
 
         let copygetProducts = [...getProducts];
         let order_details = flattenProducts(copygetProducts)
         let orders = {
-            delivery_id: delivery_id.value,
+            delivery_id: deliveryId,
             payment_with: payment_method.value,
             note: note.trim(),
             address: address.trim(),
@@ -327,9 +373,12 @@
         const res = await HIT_API.json();
         if (res.success) {
             location.href = res.redirect
+        } else {
+            alert("Checkout Gagal: " + res.message);
         }
     }
 
     generateQuantityForInput()
+    initialModal()
 </script>
 @endPushOnce

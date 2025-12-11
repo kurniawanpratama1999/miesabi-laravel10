@@ -9,6 +9,7 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-semibold pt-2 pb-4 px-3 ">Daftar Pesanan</h5>
+                    <input  id="myInput" type="text" placeholder="Search...">
                 </div>
             </div>
             <div class="table-responsive" style="max-height: 420px;">
@@ -23,6 +24,7 @@
                             <th>Total Harga</th>
                             <th>Status Pesanan</th>
                             <th>Tanggal</th>
+                            <th>Details</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,11 +118,11 @@
 
                                 <td>
                                     <div class="d-flex flex-column gap-2 text-left">
-                                        <form action="{{ route('a.orders.payment.prev', $order->id) }}" method="post">
+                                        <!-- <form action="{{ route('a.orders.payment.prev', $order->id) }}" method="post">
                                             @csrf
                                             @method('PUT')
                                             <button type="submit" class="btn btn-sm btn-danger text-nowrap">Prev</button>
-                                        </form>
+                                        </form> -->
 
                                         <span>{{ $payment_status }}</span>
 
@@ -136,37 +138,53 @@
 
                                 <td>
                                     <a href="{{ route('a.details.show', $order->id) }}" class="d-flex flex-column nav-link">
-                                        <span class="text-end text-nowrap">Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
-                                        <span class="text-end text-nowrap">Rp {{ number_format($order->delivery_price, 0, ',', '.') }}</span>
-                                        <hr class="m-0"></hr>
                                         <span class="text-end text-nowrap fw-bold">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
                                     </a>
                                 </td>
 
                                 <td>
-                                    <div class="d-flex flex-column gap-2">
-                                        @if ($order->order_status <= 1)
-                                            <form action="{{ route('a.orders.destroy', $order->id) }}" method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">Batalkan Pesanan</button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('a.orders.status.prev', $order->id) }}" method="post">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="btn btn-sm btn-danger">Prev</button>
-                                            </form>
-                                        @endif
-                                        <form action="{{ route('a.orders.status.next', $order->id) }}" method="post">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-sm btn-primary text-nowrap">{{ $order_status }}</button>
-                                        </form>
-                                    </div>
-                                </td>
+    <div class="d-flex flex-column gap-2">
+
+        {{-- Bisa batal jika status masih awal --}}
+        @if ($order->order_status <= 1)
+            <form action="{{ route('a.orders.destroy', $order->id) }}" method="post">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-warning">Batalkan Pesanan</button>
+            </form>
+        @endif
+
+        {{-- Jika pesanan belum selesai --}}
+        @if ($order->order_status != 7)
+
+            {{-- Jika pembayaran sudah lunas, tombol next status muncul --}}
+            @if ($order->payment_status == 3)
+                <form action="{{ route('a.orders.status.next', $order->id) }}" method="post">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-sm btn-primary text-nowrap">
+                        {{ $order_status }}
+                    </button>
+                </form>
+
+            {{-- Jika belum lunas, next status tidak muncul --}}
+            @else
+                <span class="text-nowrap">{{ $order_status }}</span>
+                <span class="badge bg-danger text-nowrap">Bayar Belum Lunas</span>
+            @endif
+
+        @else
+            {{-- Pesanan selesai --}}
+            <span class="text-nowrap">{{ $order_status }}</span>
+        @endif
+
+    </div>
+</td>
                                 <td>
                                     <span class="text-nowrap">{{ $order->created_at }}</span>
+                                </td>
+                                <td>
+                                    <a href="{{ route('a.details.show', $order->id) }}" class="btn btn-sm btn-info text-white">Lihat Detail</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -177,3 +195,38 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded',function(){
+        const myInput = document.getElementById('myInput');
+        const modernTable = document.querySelector('.modern-table');
+
+        if(!myInput || !modernTable) return;
+
+        const tbody = modernTable.querySelector('tbody');
+        if(!tbody)return;
+
+        const tr = tbody.getElementsByTagName('tr');
+
+        myInput.addEventListener('keyup',function(){
+            const filter = myInput.value.toUpperCase();
+
+        for(let i = 0; i < tr.length; i++){
+            const td = tr[i].getElementsByTagName('td')[0];
+
+            if(td){
+                const textValue = td.textContent || td.innerText;
+
+                if(textValue.toUpperCase().indexOf(filter)> -1){
+                    tr[i].style.display = "";
+                }else{
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        })
+        
+    })
+</script>
+@endpush

@@ -1,4 +1,6 @@
+@include('sweetalert::alert')
 @extends('layout')
+
 
 @section('title', 'Selamat Datang di Mie Sabi')
 

@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('orders', UserOrderController::class);
             Route::resource('details', UserOrderDetailController::class);
             Route::resource('reviews', UserReviewController::class);
+            Route::get('dashboard', fn () => view('pages.user.dashboard'))->name('dashboard');
         });
     });
 });

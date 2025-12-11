@@ -64,4 +64,5 @@ class OrderController extends Controller
 
         return redirect()->route('u.orders.index');
     }
+    
 }

@@ -18,7 +18,7 @@ class A_UserSeeder extends Seeder
             [
                 'role' => 'admin',
                 'name' => 'admin',
-                'username' => 'admin',
+                'username' =>'admin',
                 'phone' => '083827221096',
                 'email' => 'admin@admin.com',
                 'password' => Hash::make('adminadmin123'),
