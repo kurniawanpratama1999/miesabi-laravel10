@@ -30,7 +30,7 @@ class LoginController extends Controller
             }
 
             if ($user->role === 'user') {
-                return redirect()->route('u.menu.index');
+                return redirect()->route('u.dashboard');
             }
         }
 

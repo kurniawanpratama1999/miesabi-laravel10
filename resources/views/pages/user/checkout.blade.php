@@ -76,17 +76,34 @@
 @pushOnce('scripts')
 <script>
     async function makeOrder() {
-        const api = await fetch("{{ route('u.checkout.store') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+        try {
+            const api = await fetch("{{ route('u.checkout.store') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+                }
+            });
+            if (!api.ok) {
+                const errorText = await api.text();
+                console.error('HTTP Error :', api.status, errorText);
+                alert("Gagal membuat pesanan. Kesalahan Server." + api.status);
+                return
             }
-        })
-        const res = await api.json();
-        console.log(res)
-        if (res.success) {
-            location.href = res.redirect
+
+            const res = await api.json();
+            console.log("Response Success:", res);
+
+            if (res.success) {
+                location.href = res.redirect
+            } else {
+                console.error('Server Error:', res.message);
+                alert("Gagal membuat pesanan: " + res.message);
+            }
+        } catch (error) {
+            console.error('Fetch Error:', error);
+            alert("Gagal membuat pesanan. Terjadi kesalahan jaringan.");
+            
         }
     }
 </script>

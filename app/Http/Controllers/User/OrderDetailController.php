@@ -14,6 +14,7 @@ class OrderDetailController extends Controller
         $orderDetails = OrderDetail::with(['product', 'variant'])
             ->where('order_id', '=', $id)
             ->get();
+       
 
         return view('pages.user.orderDetails', compact('orderDetails'));
     }

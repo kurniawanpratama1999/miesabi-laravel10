@@ -1,6 +1,14 @@
+
+
 <x-html title="MIESABI">
     <x-navbar>
         @if(Auth::check() && Auth::user()->role === 'user')
+            <li id="Products-wraper" class="nav-item">
+                <a id="Products-link" href="{{ route('u.dashboard') }}" class="nav-link {{ Route::is('u.menu.index') ? 'active' : '' }}">
+                    <i id="Products-icon" class="bi bi-fork-knife"></i>
+                    <span id="Products-label">Dashboard</span>
+                </a>
+            </li>
             <li id="Products-wraper" class="nav-item">
                 <a id="Products-link" href="{{ route('u.menu.index') }}" class="nav-link {{ Route::is('u.menu.index') ? 'active' : '' }}">
                     <i id="Products-icon" class="bi bi-fork-knife"></i>
@@ -94,5 +102,6 @@
         @yield('content')
         @stack('scripts')
     </x-main>
+    @include('sweetalert::alert')
 
 </x-html>

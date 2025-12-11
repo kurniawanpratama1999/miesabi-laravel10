@@ -80,7 +80,9 @@ class CheckoutController extends Controller
 
         $orders = $arrCheckouts['orders'];
         $orderDetails = $this->processOrderDetails($arrCheckouts['order_details']);
-
+        if ($orders['delivery_id'] == 1) {
+        $orders['address'] = ''; 
+    }
         $orders['user_id'] = Auth::user()->id;
         $orders['code'] = uniqid(Auth::user()->id);
         $orders['payment_status'] = 1;
@@ -105,20 +107,22 @@ class CheckoutController extends Controller
             }
 
             DB::commit();
-
-            if ($orders['payment_with'] === 0) {
-                return response()->json(['success' => true, 'redirect' => route('u.orders.show', Auth::user()->id)]);
-            }
-
-            session()->put('checkoutController.checkoutToPayment', [
-                "order_id" => $order_id,
-                "delivery_id" => $orders['delivery_id'],
-                "subtotal" => collect($orderDetails)->sum('total')
-            ]);
-
-            session()->forget('menuController.menuToKeranjang');
             session()->forget('cartController.cartToCheckout');
-            return response()->json(['success' => true, 'redirect' => route('u.scanqr.index')]);
+            if ($orders['payment_with']== 1){
+                $createOrder->update(['payment_status' => 2]);
+                return response()->json(['success' => true, 'redirect' => route('u.orders.index')]);
+            }elseif($orders['payment_with']== 2){
+                      // Lanjut ke halaman scan qr code
+                   session()->put('checkoutController.checkoutToPayment', [
+                       "order_id" => $order_id,
+                       "delivery_id" => $orders['delivery_id'],
+                       "subtotal" => collect($orderDetails)->sum('total')
+                   ]);
+                   return response()->json(['success' => true, 'redirect' => route('u.scanqr.index')]);
+            }
+            else{
+                return response()->json(['success' => true, 'redirect' => route('u.orders.index')]);
+            }
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $th->getMessage()]);

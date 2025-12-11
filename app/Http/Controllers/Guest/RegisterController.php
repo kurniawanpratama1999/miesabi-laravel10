@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RegisterController extends Controller
 {
@@ -32,6 +33,7 @@ class RegisterController extends Controller
             ]);
 
             logger()->info("Register: Berhasil");
+            Alert::success('Registrasi Berhasil', 'Akun Anda berhasil dibuat. Silakan masuk.');
             return redirect()->route('login');
         } catch (\Throwable $th) {
             logger()->info("Register Gagal : $th");

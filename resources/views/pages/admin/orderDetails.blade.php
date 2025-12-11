@@ -9,8 +9,11 @@
             <div class="card-header">
                 <div class="d-flex flex-column justify-content-between px-3">
                     <h5 class="mb-0 fw-semibold">Detail Pesanan</h5>
-                    <p class="p-0 m-0 mt-2">{{ $order->phone }}</p>
-                    <p class="p-0 m-0">{{ $order->phone }}</p>
+                    <p class="p-0 m-0 mt-2">{{ $order->code }}</p>
+                    @if (!empty($order->note))
+                    <p class="text-muted mt-3">Catatan Khusus :</p>
+                    <p>{{ $order->note }}</p>
+                    @endif
                 </div>
             </div>
             <div class="table-responsive" style="max-height: 420px;">

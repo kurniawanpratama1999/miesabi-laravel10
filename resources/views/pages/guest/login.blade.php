@@ -6,6 +6,7 @@
     <div style="min-height: calc(100dvh - 3.5rem);" class="container d-flex align-items-center justify-content-center">
         <div class="row mx-auto">
             <form method="POST" action="{{ route('login.process') }}" class="col-12 col-lg-5 mx-auto row g-3 bg-yellow-200 p-3 rounded shadow">
+                @csrf
                 <div style="width: 100px;" class="d-flex flex-column gap-3 align-items-center mx-auto">
                     @if(isset($logo, $logo->photo))
                         <img src="{{ asset('storage/' . $logo->photo) }}" class="mx-auto d-block w-100 h-100 object-fit-cover">
